@@ -1,4 +1,4 @@
-package core;
+package client.core;
 
 public class Main {
 
