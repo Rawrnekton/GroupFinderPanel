@@ -21,7 +21,7 @@ public class GFPClient extends Application implements EventHandler<ActionEvent>{
 
 	
 	
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		
 	}
 }
