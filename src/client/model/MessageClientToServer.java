@@ -3,9 +3,9 @@ package client.model;
 import java.util.Date;
 import java.util.LinkedList;
 
-public class DataPackage {
+public class MessageClientToServer {
 
-	private String playerName;
+	private String UserName;
 	private LinkedList<String> games;
 	
 	private int timeUntilReadySeconds;
@@ -16,7 +16,7 @@ public class DataPackage {
 	private int inGameSinceSeconds;
 
 	
-	public DataPackage() {
+	public MessageClientToServer() {
 		this.lastManualRefresh = new Date();
 	}
 	
@@ -24,8 +24,8 @@ public class DataPackage {
 	/*
 	 * Set and Add Methods
 	 */
-	public void setPlayerName(String playerName) {
-		this.playerName = playerName;
+	public void setPlayerName(String UserName) {
+		this.UserName = UserName;
 	}
 
 	public void setTimeUntilReady(int timeUntilReadySeconds) {
