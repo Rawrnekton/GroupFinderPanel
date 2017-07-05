@@ -5,27 +5,36 @@ import java.util.LinkedList;
 
 public class MessageClientToServer {
 
-	private String UserName;
-	private LinkedList<String> games;
+	private String userName;
+	private LinkedList<String> gameList;
 	
 	private int timeUntilReadySeconds;
 	private Date lastManualRefresh;
 	private Date timeUntilExpired;
 	
-	private String currentPlayedGame;
+	/*
+	 * this is for later use
+	private String currentlyPlayedGame;
 	private int inGameSinceSeconds;
-
+	*/
 	
 	public MessageClientToServer() {
 		this.lastManualRefresh = new Date();
 	}
 	
-	
+	public MessageClientToServer(String userName, LinkedList<String> gameList, 
+			int timeUntilReadySeconds, Date lastManualRefresh, Date timeUntilExpired) {
+		this.userName = userName;
+		this.gameList = gameList; 
+		this.timeUntilReadySeconds = timeUntilReadySeconds;
+		this.lastManualRefresh = lastManualRefresh;
+		this.timeUntilExpired = timeUntilExpired;
+	}
 	/*
 	 * Set and Add Methods
 	 */
 	public void setPlayerName(String UserName) {
-		this.UserName = UserName;
+		this.userName = UserName;
 	}
 
 	public void setTimeUntilReady(int timeUntilReadySeconds) {
@@ -33,7 +42,7 @@ public class MessageClientToServer {
 	}
 
 	public void addGame(String newGame) {
-		games.add(newGame);
+		gameList.add(newGame);
 	}
 	
 	public void updateDate() {
@@ -43,6 +52,5 @@ public class MessageClientToServer {
 	/*
 	 * Get-Methoden
 	 */
-	
 	
 }
