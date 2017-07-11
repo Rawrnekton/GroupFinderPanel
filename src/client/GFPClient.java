@@ -6,10 +6,6 @@ import javafx.stage.Stage;
 
 public class GFPClient extends Application {
 	public static void main(String[] args) {
-
-		
-		
-		
 		launch(args);
 	}
 
