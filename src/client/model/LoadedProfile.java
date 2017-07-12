@@ -7,14 +7,29 @@ public class LoadedProfile {
 	private String profilName;
 	private String userName;
 	
+	private String serverAdress;
+	private String serverPassword;
+	
 	private LinkedList<String> gameList;
 	
+	public LoadedProfile() {
+		
+	}
+		
 	public void setProfilName(String profilName) {
 		this.profilName = profilName;
 	}
 	
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+	
+	public void setServerAdress(String serverAdress) {
+		this.serverAdress = serverAdress;
+	}
+	
+	public void serverPassword(String serverPassword) {
+		this.serverPassword = serverPassword;
 	}
 	
 	public void setGameList(LinkedList<String> gameList) {
@@ -27,6 +42,14 @@ public class LoadedProfile {
 	
 	public String getUserName() {
 		return userName;
+	}
+	
+	public String getServerAdress() {
+		return this.serverAdress;
+	}
+	
+	public String getServerPassword() {
+		return this.serverPassword;
 	}
 	
 	public LinkedList<String> getGameList() {

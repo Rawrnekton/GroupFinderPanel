@@ -1,12 +1,10 @@
 package client.view;
 
+import client.view.manageprofilview.ManageProfilView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 
 public abstract class TopPane {
 
@@ -31,12 +29,7 @@ public abstract class TopPane {
 		btn2.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				Stage managementStage = new Stage();
-				BorderPane managementStageMainPane = new BorderPane();
-
-				Scene scene = new Scene(managementStageMainPane, 250, 250);
-				managementStage.setScene(scene);
-				managementStage.show();
+				ManageProfilView manageProfilView = new ManageProfilView();
 			}
 		});
 
