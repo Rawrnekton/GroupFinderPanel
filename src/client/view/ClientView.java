@@ -1,5 +1,6 @@
 package client.view;
 
+import client.view.primaryview.TopPane;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;

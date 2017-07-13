@@ -1,4 +1,4 @@
-package client.view;
+package client.view.primaryview;
 
 import client.view.manageprofilview.ManageProfilView;
 import javafx.event.ActionEvent;

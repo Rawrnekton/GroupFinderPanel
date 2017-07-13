@@ -2,6 +2,8 @@ package client.model;
 
 import java.io.File;
 
+import client.view.manageprofilview.LoadedProfile;
+
 public abstract class Lib {
 	private File file;
 	

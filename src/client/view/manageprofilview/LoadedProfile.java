@@ -1,4 +1,4 @@
-package client.model;
+package client.view.manageprofilview;
 
 import java.util.LinkedList;
 
@@ -7,13 +7,13 @@ public class LoadedProfile {
 	private String profilName;
 	private String userName;
 	
-	private String serverAdress;
+	private String serverAddress;
 	private String serverPassword;
 	
 	private LinkedList<String> gameList;
 	
 	public LoadedProfile() {
-		
+		gameList= new LinkedList<String>();
 	}
 		
 	public void setProfilName(String profilName) {
@@ -25,11 +25,15 @@ public class LoadedProfile {
 	}
 	
 	public void setServerAdress(String serverAdress) {
-		this.serverAdress = serverAdress;
+		this.serverAddress = serverAdress;
 	}
 	
 	public void serverPassword(String serverPassword) {
 		this.serverPassword = serverPassword;
+	}
+	
+	public void addGameToList(String newGame) {
+		gameList.add(newGame);
 	}
 	
 	public void setGameList(LinkedList<String> gameList) {
@@ -45,7 +49,7 @@ public class LoadedProfile {
 	}
 	
 	public String getServerAdress() {
-		return this.serverAdress;
+		return this.serverAddress;
 	}
 	
 	public String getServerPassword() {
