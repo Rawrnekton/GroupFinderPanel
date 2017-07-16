@@ -21,23 +21,22 @@ class ClientHandler implements Callable<String> {
 	/*
 	 * port auf dem der client den server sucht
 	 */
-	int port = 50000;
+	int port = 2709; //used by Supermon .. wtf
 	/*
 	 * stadtname
 	 */
 	String stadtName;
-	
+
 	/*
 	 * Konstruktor des Handlers
 	 */
 	public ClientHandler(String stadtName) {
 		this.stadtName = stadtName;
 	}
-	
+
 	/*
-	 * call() Funktion des interfaces Callable<String>
-	 * ruft die Funktion zum ausgeben der serverantwort auf
-	 * und gibt diese zurück
+	 * call() Funktion des interfaces Callable<String> ruft die Funktion zum
+	 * ausgeben der serverantwort auf und gibt diese zurück
 	 */
 	@Override
 	public String call() throws Exception {
@@ -46,49 +45,52 @@ class ClientHandler implements Callable<String> {
 		return RequestServer(stadtName);
 		//Thread.sleep(1000);
 	}
-	
+
 	/*
 	 * Funktion zum Senden und Empfangen der Informationen
 	 */
 	String RequestServer(String _string) throws IOException {
 		String empfangeneNachricht;
 		String zuSendendeNachricht;
-		
+
 		/*
-		 * Erstellt einen neuen Socket an der angegeben IP, also hier 127.0.0.1:50000
-		 * dies ist die addresse des servers
+		 * Erstellt einen neuen Socket an der angegeben IP, also hier
+		 * 127.0.0.1:50000 dies ist die addresse des servers
 		 */
-		Socket socket = new Socket(ip,port);
+		Socket socket = new Socket(ip, port);
 		zuSendendeNachricht = _string;
-	    /*
-	     * Sendet den Stadtnamen an den Server
-	     */
-	    schreibeNachricht(socket, zuSendendeNachricht);
-	    /*
-	     * Empfängt die vom Server gesendete Nachricht
-	     */
-	    empfangeneNachricht = leseNachricht(socket);
-	    /*
-	     * schließt den Socket
-	     */
-	    socket.close();
-	    return empfangeneNachricht;
-	  }
+		/*
+		 * Sendet den Stadtnamen an den Server
+		 */
+		schreibeNachricht(socket, zuSendendeNachricht);
+		/*
+		 * Empfängt die vom Server gesendete Nachricht
+		 */
+		empfangeneNachricht = leseNachricht(socket);
+		/*
+		 * schließt den Socket
+		 */
+		socket.close();
+		return empfangeneNachricht;
+	}
 
 	/*
-	 * sendet die Nachricht an den Server, dazu wird ein printwriter erst mit dem outputstream des socket verbunden,
-	 * danach beschrieben und danach geflusht, der Server empfängt auf der anderen Seite diese Nachricht
+	 * sendet die Nachricht an den Server, dazu wird ein printwriter erst mit
+	 * dem outputstream des socket verbunden, danach beschrieben und danach
+	 * geflusht, der Server empfängt auf der anderen Seite diese Nachricht
 	 */
 	void schreibeNachricht(Socket socket, String nachricht) throws IOException {
 		PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
-	    printWriter.print(nachricht);
-	    printWriter.flush();
+		printWriter.print(nachricht);
+		printWriter.flush();
 	}
-	
+
 	/*
-	 * empfängt die Nachricht vom Server, dazu wird der Funktion die Adresse des socket gegeben
-	 * danach wird ein reader erzeugt der am inputstream des socket "ließt", dieser empfängt die vom Server gesendete Nachricht
-	 * Antwortlänge ist länger als Nachrichtenlänge, da die Antwort wesentlich länger ist.
+	 * empfängt die Nachricht vom Server, dazu wird der Funktion die Adresse des
+	 * socket gegeben danach wird ein reader erzeugt der am inputstream des
+	 * socket "ließt", dieser empfängt die vom Server gesendete Nachricht
+	 * Antwortlänge ist länger als Nachrichtenlänge, da die Antwort wesentlich
+	 * länger ist.
 	 */
 	String leseNachricht(Socket socket) throws IOException {
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));

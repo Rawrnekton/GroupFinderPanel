@@ -23,7 +23,7 @@ public class ClientView{
 
 		BorderPane mainWindowPane = new BorderPane();
 		
-		TopPane mainWindowTopPane = new TopPane(observer);
+		TopPane mainWindowTopPane = new TopPane(primaryStage, observer);
 		mainWindowPane.setTop(mainWindowTopPane);
 
 		//GridPane leftPane = new GridPane();

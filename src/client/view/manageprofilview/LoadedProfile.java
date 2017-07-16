@@ -87,7 +87,7 @@ public class LoadedProfile {
 		usedGameList = new LinkedList<String>();
 		unusedGameList = new LinkedList<String>();
 		
-		final String FILENAME = "/home/jonathan/git/GroupFinderPanel/src/client/view/manageprofilview/profiles" + usedProfil;
+		final String FILENAME = "/home/jonathan/git/GroupFinderPanel/src/client/view/manageprofilview/profiles/" + usedProfil;
 		
 		BufferedReader br = null;
 		FileReader fr = null;
@@ -136,7 +136,7 @@ public class LoadedProfile {
 	}
 	
 	public void saveToFile(String toBeSaved) {
-		final String FILENAME = "/home/jonathan/git/GroupFinderPanel/src/client/view/manageprofilview/profiles" + profilName;
+		final String FILENAME = "/home/jonathan/git/GroupFinderPanel/src/client/view/manageprofilview/profiles/" + profilName;
 		FileWriter write;
 		try {
 			write = new FileWriter(FILENAME, false);

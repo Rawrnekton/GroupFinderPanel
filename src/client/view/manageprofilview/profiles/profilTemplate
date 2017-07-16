@@ -1,5 +1,5 @@
-profilTemplate //profileName, should be filename
-usrName
+profilTemplate
+userName
 serverAddress
 groupName
 serverPassword

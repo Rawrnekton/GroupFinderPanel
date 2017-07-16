@@ -5,11 +5,16 @@ import java.util.Observer;
 
 import client.view.ClientView;
 import client.view.manageprofilview.LoadedProfile;
+import client.view.manageprofilview.ProfilManageView;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class GFPClient extends Application implements Observer{
 	public static void main(String[] args) {
+		
+		
+		
+		
 		launch(args);
 	}
 
@@ -22,8 +27,10 @@ public class GFPClient extends Application implements Observer{
 
 	@Override
 	public void update(Observable o, Object arg) {
-		LoadedProfile loadedProfile = (LoadedProfile) arg;
-		System.out.println(loadedProfile.getProfileName() + " ist geladen und wird gesendet.");	
-		System.out.println(loadedProfile.toString());
+		if(o instanceof ProfilManageView) {
+			LoadedProfile loadedProfile = (LoadedProfile) arg;
+			System.out.println(loadedProfile.getProfileName() + " ist geladen und wird gesendet.");	
+			System.out.println(loadedProfile.toString());
+		}
 	}
 }

@@ -8,14 +8,16 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 
 public class TopPane extends HBox {
 
 	Observer observer;
+	Stage primaryStage;
 
-	public TopPane(Observer observer) {
+	public TopPane(Stage primaryStage, Observer observer) {
 		this.observer = observer;
-
+		this.primaryStage = primaryStage;
 		/*
 		 * create button setText setOnAction setAttributes?
 		 */
@@ -33,9 +35,9 @@ public class TopPane extends HBox {
 		btn2.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				
+
 				@SuppressWarnings("unused")
-				ProfilManageView manageProfilView = new ProfilManageView(getObserver());
+				ProfilManageView manageProfilView = new ProfilManageView(getPrimaryStage(), getObserver());
 			}
 		});
 
@@ -45,7 +47,15 @@ public class TopPane extends HBox {
 		this.setPadding(new Insets(5, 5, 5, 5));
 	}
 
+	/*
+	 * dont understand why i cant just use the variables, since they are defined
+	 * lcally .. but eh, works i guess
+	 */
 	private Observer getObserver() {
 		return this.observer;
+	}
+
+	private Stage getPrimaryStage() {
+		return this.primaryStage;
 	}
 }
