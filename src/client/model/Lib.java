@@ -5,7 +5,7 @@ import java.io.File;
 import client.view.manageprofilview.LoadedProfile;
 
 public abstract class Lib {
-	private File file;
+	/*private File file;
 	
 	public static LoadedProfile createProfileFromFile(File file) {
 		LoadedProfile returnProfile = new LoadedProfile();
@@ -13,5 +13,5 @@ public abstract class Lib {
 		//TODO
 		
 		return returnProfile;
-	}
+	}*/
 }

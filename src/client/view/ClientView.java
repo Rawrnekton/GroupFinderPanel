@@ -1,33 +1,37 @@
 package client.view;
 
+import java.util.Observer;
+
 import client.view.primaryview.TopPane;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 /*
  * Sets up View for applicationa and manages the displayed content
  * that is supplied by the controller
  */
-public class ClientView {
+public class ClientView{
 	Stage primaryStage;
 
 	/*
 	 * Setup initial View
 	 */
-	public void startUpView(Stage _primaryStage) {
-		this.primaryStage = _primaryStage;
+	public ClientView(Stage primaryStage, Observer observer) {
+		this.primaryStage = primaryStage;
 		primaryStage.setTitle("GroupFinderPanel");
 
 		BorderPane mainWindowPane = new BorderPane();
+		
+		TopPane mainWindowTopPane = new TopPane(observer);
+		mainWindowPane.setTop(mainWindowTopPane);
 
-		mainWindowPane.setTop(TopPane.setTopPane());
-
-		GridPane leftPane = new GridPane();
+		//GridPane leftPane = new GridPane();
 
 		Scene scene = new Scene(mainWindowPane, 300, 250);
 		primaryStage.setScene(scene);
-		primaryStage.show();
+		primaryStage.show();		
 	}
+	
+	
 }
