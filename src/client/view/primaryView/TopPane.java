@@ -1,8 +1,8 @@
-package client.view.primaryview;
+package client.view.primaryView;
 
 import java.util.Observer;
 
-import client.view.manageprofilview.ProfilManageView;
+import client.view.manageProfileView.ProfilManageView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;

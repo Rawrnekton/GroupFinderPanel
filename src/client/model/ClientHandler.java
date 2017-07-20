@@ -1,102 +1,66 @@
 package client.model;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.concurrent.Callable;
 
-/*
- * callable Clienthandler der für jeden neuen Client erzeugt wird
- * und in einem eigene thread dafür sorgt dass der Client seine
- * Nachricht schickt
- */
-class ClientHandler implements Callable<String> {
-	/*
-	 * localhost addresse für
-	 */
-	String ip = "127.0.0.1";
-	/*
-	 * port auf dem der client den server sucht
-	 */
-	int port = 2709; //used by Supermon .. wtf
-	/*
-	 * stadtname
-	 */
-	String stadtName;
+class ClientHandler implements Callable<Object> {
 
-	/*
-	 * Konstruktor des Handlers
-	 */
-	public ClientHandler(String stadtName) {
-		this.stadtName = stadtName;
+	private String ip = "127.0.0.1"; // "vigor-mortis.ddns.net"; //will be configurable via profile
+	private int port = 2709; //is already registered and used by Supermon
+
+	Object clientMessage;
+
+	ObjectOutputStream outToServerStream;
+	ObjectInputStream inFromServerStream;
+	
+	public ClientHandler(Object clientMessage) {
+		this.clientMessage = clientMessage;
 	}
 
-	/*
-	 * call() Funktion des interfaces Callable<String> ruft die Funktion zum
-	 * ausgeben der serverantwort auf und gibt diese zurück
-	 */
 	@Override
-	public String call() throws Exception {
+	public Object call() throws Exception {
 		System.out.println("ClientHandler wurde gestartet.");
-		//Thread.sleep(2000);
-		return RequestServer(stadtName);
-		//Thread.sleep(1000);
+		return RequestServer(clientMessage);
 	}
 
-	/*
-	 * Funktion zum Senden und Empfangen der Informationen
-	 */
-	String RequestServer(String _string) throws IOException {
-		String empfangeneNachricht;
-		String zuSendendeNachricht;
+	public Object RequestServer(Object clientMessage) throws IOException {
 
-		/*
-		 * Erstellt einen neuen Socket an der angegeben IP, also hier
-		 * 127.0.0.1:50000 dies ist die addresse des servers
-		 */
+		Object empfangeneNachricht;
+		Object zuSendendeNachricht = clientMessage;
+
 		Socket socket = new Socket(ip, port);
-		zuSendendeNachricht = _string;
-		/*
-		 * Sendet den Stadtnamen an den Server
-		 */
+
+		System.out.println("Socket created.");
+
+		outToServerStream = new ObjectOutputStream(socket.getOutputStream());
+		inFromServerStream = new ObjectInputStream(socket.getInputStream());
+		
 		schreibeNachricht(socket, zuSendendeNachricht);
-		/*
-		 * Empfängt die vom Server gesendete Nachricht
-		 */
 		empfangeneNachricht = leseNachricht(socket);
-		/*
-		 * schließt den Socket
-		 */
+
 		socket.close();
+		System.out.println("Socket closed");
 		return empfangeneNachricht;
 	}
 
-	/*
-	 * sendet die Nachricht an den Server, dazu wird ein printwriter erst mit
-	 * dem outputstream des socket verbunden, danach beschrieben und danach
-	 * geflusht, der Server empfängt auf der anderen Seite diese Nachricht
-	 */
-	void schreibeNachricht(Socket socket, String nachricht) throws IOException {
-		PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
-		printWriter.print(nachricht);
-		printWriter.flush();
+	void schreibeNachricht(Socket socket, Object clientMessage) throws IOException {
+		System.out.println("Writing object to Socket.");
+		outToServerStream.writeObject(clientMessage);
+		System.out.println("Writing object was succesfull");
 	}
 
-	/*
-	 * empfängt die Nachricht vom Server, dazu wird der Funktion die Adresse des
-	 * socket gegeben danach wird ein reader erzeugt der am inputstream des
-	 * socket "ließt", dieser empfängt die vom Server gesendete Nachricht
-	 * Antwortlänge ist länger als Nachrichtenlänge, da die Antwort wesentlich
-	 * länger ist.
-	 */
-	String leseNachricht(Socket socket) throws IOException {
-		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		char[] buffer = new char[100];
-		int anzahlZeichen = bufferedReader.read(buffer, 0, 100);
-		String nachricht = new String(buffer, 0, anzahlZeichen);
-		return nachricht;
+	private Object leseNachricht(Socket socket) throws IOException {
+		Object inFromServerMessage = null;
+		
+		try {
+			inFromServerMessage = inFromServerStream.readObject();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			System.out.println("Socket konnte nicht gelesen werden.");
+		}
+		return inFromServerMessage;
 	}
 }

@@ -1,14 +1,18 @@
-package client.view.manageprofilview;
+package client.view.manageProfileView;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.LinkedList;
 
-public class LoadedProfile {
+import client.model.Lib;
 
+public class LoadedProfile implements Serializable{
+
+	private static final long serialVersionUID = 4061867404946651656L;
 	private String profilName;
 	private String userName;
 	
@@ -87,7 +91,7 @@ public class LoadedProfile {
 		usedGameList = new LinkedList<String>();
 		unusedGameList = new LinkedList<String>();
 		
-		final String FILENAME = "/home/jonathan/git/GroupFinderPanel/src/client/view/manageprofilview/profiles/" + usedProfil;
+		final String FILENAME = Lib.PROFILEPATH + usedProfil;
 		
 		BufferedReader br = null;
 		FileReader fr = null;
@@ -136,7 +140,7 @@ public class LoadedProfile {
 	}
 	
 	public void saveToFile(String toBeSaved) {
-		final String FILENAME = "/home/jonathan/git/GroupFinderPanel/src/client/view/manageprofilview/profiles/" + profilName;
+		final String FILENAME = Lib.PROFILEPATH + profilName;
 		FileWriter write;
 		try {
 			write = new FileWriter(FILENAME, false);

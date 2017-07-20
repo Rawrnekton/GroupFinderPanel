@@ -1,4 +1,4 @@
-package client.view.manageprofilview;
+package client.view.manageProfileView;
 
 import java.io.File;
 import java.util.Arrays;
@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Observable;
 import java.util.Observer;
 
+import client.model.Lib;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -80,11 +81,9 @@ public class ProfilManageView extends Observable {
 		scene = new Scene(profileManagementStageMainPane);
 
 		/*
-		 * TopPane I do desire we may be better strangers. - SP
+		 * I do desire we may be better strangers. - SP
 		 */
-
 		
-
 		selectedProfileComboBox = new ComboBox<String>();
 		selectedProfileComboBox.setPromptText("Unbench the Kench");
 		selectedProfileComboBox.setEditable(true);
@@ -97,15 +96,10 @@ public class ProfilManageView extends Observable {
 			}
 		});
 		profileManagementStageTopPane.getChildren().add(selectedProfileComboBox);
-		
 		updateComboBoxContent();
-		
 		selectedProfileComboBox.getSelectionModel().selectFirst();
-		
-		System.out.println("Combo Box kreiert");
 		if (selectedProfileComboBox.getValue() == null) {
 			selectedProfile = new LoadedProfile("profilTemplate");
-			//System.out.println("Profil 1 geladen");
 		} else {
 			selectedProfile = new LoadedProfile(selectedProfileComboBox.getValue());
 		}
@@ -148,7 +142,7 @@ public class ProfilManageView extends Observable {
 		deleteProfileButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				File toBeDeleted = new File("/home/jonathan/git/GroupFinderPanel/src/client/view/manageprofilview/profiles/" + selectedProfileComboBox.getValue());
+				File toBeDeleted = new File(Lib.PROFILEPATH + selectedProfileComboBox.getValue());
 				selectedProfileComboBox.getSelectionModel().selectFirst();
 				toBeDeleted.delete();
 				
@@ -348,10 +342,10 @@ public class ProfilManageView extends Observable {
 
 		for (int i = 0; i < listOfProfileFiles.length; i++) {
 			if (listOfProfileFiles[i].isFile()) {
-				System.out.println("File " + listOfProfileFiles[i].getName());
+				//System.out.println("File " + listOfProfileFiles[i].getName());
 				listOfProfiles[i] = listOfProfileFiles[i].getName();
 			} else if (listOfProfileFiles[i].isDirectory()) {
-				System.out.println("Directory " + listOfProfileFiles[i].getName());
+				//System.out.println("Directory " + listOfProfileFiles[i].getName());
 			}
 		}
 		Arrays.sort(listOfProfiles);
