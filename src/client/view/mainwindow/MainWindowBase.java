@@ -1,4 +1,4 @@
-package client.view.primaryView;
+package client.view.mainwindow;
 
 import java.util.Observer;
 
@@ -6,16 +6,16 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-public class PrimaryStageView {
+public class MainWindowBase {
 	Stage primaryStage;
 
-	public PrimaryStageView(Stage primaryStage, Observer observer) {
+	public MainWindowBase(Stage primaryStage, Observer observer) {
 		this.primaryStage = primaryStage;
 		primaryStage.setTitle("GroupFinderPanel");
 	
 		BorderPane mainWindowPane = new BorderPane();
 		
-		TopPane mainWindowTopPane = new TopPane(primaryStage, observer);
+		MainWindowTopPane mainWindowTopPane = new MainWindowTopPane(primaryStage, observer);
 		mainWindowPane.setTop(mainWindowTopPane);
 	
 		//GridPane leftPane = new GridPane();

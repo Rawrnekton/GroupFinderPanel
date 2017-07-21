@@ -2,7 +2,7 @@ package client.view;
 
 import java.util.Observer;
 
-import client.view.primaryView.PrimaryStageView;
+import client.view.mainwindow.MainWindowBase;
 import javafx.stage.Stage;
 
 /*
@@ -16,6 +16,6 @@ public class ClientView{
 	 */
 	public ClientView(Stage primaryStage, Observer observer) {
 		@SuppressWarnings("unused")
-		PrimaryStageView primaryStageView = new PrimaryStageView(primaryStage, observer);
+		MainWindowBase primaryStageView = new MainWindowBase(primaryStage, observer);
 	}
 }

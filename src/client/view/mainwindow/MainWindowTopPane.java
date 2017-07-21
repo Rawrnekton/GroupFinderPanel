@@ -1,8 +1,8 @@
-package client.view.primaryView;
+package client.view.mainwindow;
 
 import java.util.Observer;
 
-import client.view.manageProfileView.ProfilManageView;
+import client.view.profilemanagingwindow.ProfileManagingWindowBase;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -10,12 +10,12 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-public class TopPane extends HBox {
+public class MainWindowTopPane extends HBox {
 
 	Observer observer;
 	Stage primaryStage;
 
-	public TopPane(Stage primaryStage, Observer observer) {
+	public MainWindowTopPane(Stage primaryStage, Observer observer) {
 		this.observer = observer;
 		this.primaryStage = primaryStage;
 		/*
@@ -37,7 +37,7 @@ public class TopPane extends HBox {
 			public void handle(ActionEvent event) {
 
 				@SuppressWarnings("unused")
-				ProfilManageView manageProfilView = new ProfilManageView(getPrimaryStage(), getObserver());
+				ProfileManagingWindowBase manageProfilView = new ProfileManagingWindowBase(getPrimaryStage(), getObserver());
 			}
 		});
 

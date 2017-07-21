@@ -1,4 +1,4 @@
-package client.view.manageProfileView;
+package client.view.profilemanagingwindow;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -15,6 +15,7 @@ public class LoadedProfile implements Serializable{
 	private static final long serialVersionUID = 4061867404946651656L;
 	private String profilName;
 	private String userName;
+	private int clientID;
 	
 	private String groupName;
 	private String serverAddress;
@@ -26,63 +27,59 @@ public class LoadedProfile implements Serializable{
 	public LoadedProfile(String usedProfil) {
 		this.profilName = usedProfil;
 		loadProfile(usedProfil);
+		this.clientID = 0;
 	}
 		
 	public void setProfilName(String profilName) {
 		this.profilName = profilName;
 	}
-	
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}	
+	public void setclientID(int clientID) {
+		this.clientID = clientID;
 	}
-	
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
 	}
-	
 	public void setServerAdress(String serverAdress) {
 		this.serverAddress = serverAdress;
 	}
-	
 	public void setServerPassword(String serverPassword) {
 		this.serverPassword = serverPassword;
+	}
+	public void setUsedGameList(LinkedList<String> usedGameList) {
+		this.usedGameList = usedGameList;
+	}
+	public void setUnusedGameList(LinkedList<String> unusedGameList) {
+		this.unusedGameList = unusedGameList;
 	}
 	
 	public void addGameToList(String newGame) {
 		usedGameList.add(newGame);
 	}
 	
-	public void setUsedGameList(LinkedList<String> usedGameList) {
-		this.usedGameList = usedGameList;
-	}
-	
-	public void setUnusedGameList(LinkedList<String> unusedGameList) {
-		this.unusedGameList = unusedGameList;
-	}
 	public String getProfileName() {
 		return profilName;
 	}
-	
 	public String getUserName() {
 		return userName;
 	}
-	
+	public int getClientID() {
+		return this.clientID;
+	}
 	public String getGroupName(){
 		return groupName;
 	}
-	
 	public String getServerAdress() {
 		return this.serverAddress;
 	}
-	
 	public String getServerPassword() {
 		return this.serverPassword;
 	}
-	
 	public LinkedList<String> getUsedGameList() {
 		return usedGameList;
 	}
-	
 	public LinkedList<String> getUnusedGameList() {
 		return unusedGameList;
 	}

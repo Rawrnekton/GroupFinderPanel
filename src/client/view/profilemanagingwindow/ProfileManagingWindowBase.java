@@ -1,4 +1,4 @@
-package client.view.manageProfileView;
+package client.view.profilemanagingwindow;
 
 import java.io.File;
 import java.util.Arrays;
@@ -24,7 +24,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class ProfilManageView extends Observable {
+public class ProfileManagingWindowBase extends Observable {
 
 	/*
 	 * Misc Attributes
@@ -67,7 +67,7 @@ public class ProfilManageView extends Observable {
 	TextField newGameTextField;
 	Button newGameButton;
 
-	public ProfilManageView(Stage primaryStage, Observer observer) {
+	public ProfileManagingWindowBase(Stage primaryStage, Observer observer) {
 		this.observer = observer;
 		this.primaryStage = primaryStage;
 		addObserver(observer);
@@ -80,10 +80,6 @@ public class ProfilManageView extends Observable {
 
 		scene = new Scene(profileManagementStageMainPane);
 
-		/*
-		 * I do desire we may be better strangers. - SP
-		 */
-		
 		selectedProfileComboBox = new ComboBox<String>();
 		selectedProfileComboBox.setPromptText("Unbench the Kench");
 		selectedProfileComboBox.setEditable(true);
@@ -335,21 +331,19 @@ public class ProfilManageView extends Observable {
 	}
 
 	private void updateComboBoxContent() {
-
 		File folder = new File("/home/jonathan/git/GroupFinderPanel/src/client/view/manageprofilview/profiles/");
 		File[] listOfProfileFiles = folder.listFiles();
 		listOfProfiles = new String[listOfProfileFiles.length];
-
 		for (int i = 0; i < listOfProfileFiles.length; i++) {
 			if (listOfProfileFiles[i].isFile()) {
 				//System.out.println("File " + listOfProfileFiles[i].getName());
 				listOfProfiles[i] = listOfProfileFiles[i].getName();
 			} else if (listOfProfileFiles[i].isDirectory()) {
+				//TODO should be changed to actually prevent it from crashing if a directory is found here
 				//System.out.println("Directory " + listOfProfileFiles[i].getName());
 			}
 		}
 		Arrays.sort(listOfProfiles);
-
 		profileNames = FXCollections.observableArrayList(listOfProfiles);
 		
 		selectedProfileComboBox.setItems(profileNames);

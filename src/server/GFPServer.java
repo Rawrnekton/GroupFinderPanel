@@ -11,7 +11,7 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import client.view.manageProfileView.LoadedProfile;
+import client.view.profilemanagingwindow.LoadedProfile;
 
 /*
  * Klasse zum starten des Wetter-Server der sich um die Clients kümmert

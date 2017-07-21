@@ -2,7 +2,7 @@ package client.model;
 
 import java.util.concurrent.FutureTask;
 
-import client.view.manageProfileView.LoadedProfile;
+import client.view.profilemanagingwindow.LoadedProfile;
 
 public class ClientBase {
 
