@@ -237,7 +237,7 @@ public class ProfileManagingWindowBase extends Observable {
 		Collections.sort(selectedProfile.getUnusedGameList());
 		//selectedProfile.getUsedGameList()
 
-		int maxColoumCount = 3;
+		int maxColoumCount = 4;
 		int currentColoum = 0;
 		int currentRow = 0;
 		int buttonWidth = 120;
@@ -331,7 +331,7 @@ public class ProfileManagingWindowBase extends Observable {
 	}
 
 	private void updateComboBoxContent() {
-		File folder = new File("/home/jonathan/git/GroupFinderPanel/src/client/view/manageprofilview/profiles/");
+		File folder = new File(Lib.PROFILEPATH);
 		File[] listOfProfileFiles = folder.listFiles();
 		listOfProfiles = new String[listOfProfileFiles.length];
 		for (int i = 0; i < listOfProfileFiles.length; i++) {

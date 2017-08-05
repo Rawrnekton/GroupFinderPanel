@@ -17,7 +17,6 @@ public class MainWindowBase {
 		
 		MainWindowTopPane mainWindowTopPane = new MainWindowTopPane(primaryStage, observer);
 		mainWindowPane.setTop(mainWindowTopPane);
-	
 		//GridPane leftPane = new GridPane();
 	
 		Scene scene = new Scene(mainWindowPane, 300, 250);

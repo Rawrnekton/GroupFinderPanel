@@ -10,6 +10,9 @@ import java.util.LinkedList;
 
 import client.model.Lib;
 
+/*
+ * This should be moved somewhere else
+ */
 public class LoadedProfile implements Serializable{
 
 	private static final long serialVersionUID = 4061867404946651656L;
@@ -36,7 +39,7 @@ public class LoadedProfile implements Serializable{
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}	
-	public void setclientID(int clientID) {
+	public void setClientID(int clientID) {
 		this.clientID = clientID;
 	}
 	public void setGroupName(String groupName) {

@@ -47,9 +47,9 @@ class ClientHandler implements Callable<Object> {
 	}
 
 	void schreibeNachricht(Socket socket, Object clientMessage) throws IOException {
-		System.out.println("Writing object to Socket.");
+		System.out.println("Writing object to socket.");
 		outToServerStream.writeObject(clientMessage);
-		System.out.println("Writing object was succesfull");
+		System.out.println("Writing object was succesfull.");
 	}
 
 	private Object leseNachricht(Socket socket) throws IOException {
