@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.LinkedList;
 
 import client.model.Lib;
@@ -26,11 +27,14 @@ public class LoadedProfile implements Serializable{
 	
 	private LinkedList<String> usedGameList;
 	private LinkedList<String> unusedGameList;
+
+	private Date dateOfCreation;
 	
 	public LoadedProfile(String usedProfil) {
 		this.profilName = usedProfil;
 		loadProfile(usedProfil);
 		this.clientID = 0;
+		this.dateOfCreation = new Date();
 	}
 		
 	public void setProfilName(String profilName) {
@@ -81,10 +85,17 @@ public class LoadedProfile implements Serializable{
 		return this.serverPassword;
 	}
 	public LinkedList<String> getUsedGameList() {
-		return usedGameList;
+		return this.usedGameList;
 	}
 	public LinkedList<String> getUnusedGameList() {
-		return unusedGameList;
+		return this.unusedGameList;
+	}
+	public Date getDateOfCreation() {
+		return this.dateOfCreation;
+	}
+	
+	public void updateDateOfCreation() {
+		this.dateOfCreation = new Date();
 	}
 	
 	public void loadProfile(String usedProfil) {

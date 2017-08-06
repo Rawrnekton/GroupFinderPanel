@@ -70,27 +70,14 @@ class NetworkService implements Runnable {
 
 class CleanUpService implements Runnable {
 	private StoredData storedData = new StoredData();
-	int nextClientID;
-	
-	private final ServerSocket serverSocket;
-	private final ExecutorService pool;
 
-	public CleanUpService(ExecutorService pool, ServerSocket serverSocket) {
-		this.serverSocket = serverSocket;
-		this.pool = pool;
-		nextClientID = 1;
+	public CleanUpService() {
+
 	}
 
 	public void run() {
-		try {
-			while (true) {
-				Socket cs = serverSocket.accept();
-				System.out.println("New socket established.");
-				pool.execute(new Handler(cs, storedData, nextClientID));
-				nextClientID++;
-			}
-		} catch (IOException e) {
-			System.out.println("--- Interrupt CleanUpService-run");
+		while (true) {
+			//delete old profiles
 		}
 	}
 }
