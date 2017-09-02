@@ -4,63 +4,160 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Observable;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import client.view.profilemanagingwindow.LoadedProfile;
 
-public class Handler implements Runnable {
+public class Handler extends Observable implements Runnable {
 	private final Socket client;
-	ObjectInputStream inFromClientStream;
-	ObjectOutputStream outToClientStream;
-	LoadedProfile loadedProfile;
-	StoredData storedData;
-	ServerToClientMessage serverToClientMessage;
-	int nextClientID;
+	private final NetworkService networkServiceThread;
 	
-
-	Handler(Socket client, StoredData storedData, int nextClientID) {
+	private ObjectInputStream inFromClientStream;
+	private ObjectOutputStream outToClientStream;
+	
+	private LoadedProfile loadedProfile;
+	private StoredData storedData;
+	private ServerToClientMessage serverToClientMessage;
+	
+	
+	/**
+	 * Debug Value, that is used to communicate the current State to the Console
+	 */
+	private String statusMessage = new String();
+	private boolean newProfilesAvailable;
+	
+	private static int nextClientID = 0;
+	private int thisClientID;
+	/*
+	 * Either Upstream or Downstream
+	 * Um es zu vereinfachen: der server ist oben
+	 * also upstream ist: data vom client zum server
+	 * downstream: data vom server zum client
+	 */
+	private String clientType;
+	
+	Handler(Socket client, NetworkService networkServiceThread) {
 		this.client = client;
-		this.storedData = storedData;
-		this.nextClientID = nextClientID;
-		serverToClientMessage = new ServerToClientMessage();
+		this.networkServiceThread = networkServiceThread;
+		addObserver(networkServiceThread);
+		
+		try {
+			inFromClientStream = new ObjectInputStream(this.client.getInputStream());
+			outToClientStream = new ObjectOutputStream(this.client.getOutputStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
+	/*
+	 * the protocol for transmission will be:
+	 * while true:
+	 * receive clients profile
+	 * send all profiles
+	 * -> to get the new profiles, the client needs to send his profile
+	 * 
+	 * client.isClosed()
+	 */
 	public void run() {
+		//check if upstream or downstream
+		
+		statusMessage = "Clienthandler started.";
+		System.out.println(statusMessage);
+		
 		try {
-			inFromClientStream = new ObjectInputStream(client.getInputStream());
-			outToClientStream = new ObjectOutputStream(client.getOutputStream());
+			thisClientID = (int) inFromClientStream.readObject();
 
-			System.out.println("Clienthandler startet");
+			/*
+			 * if ID is zero: this is the first thread that the client connected with
+			 * -> give him a real ID and wait for his profile,
+			 * else: use it as downstream for all data rn
+			 * 
+			 * setup here is slightly hacky tbh
+			 */
+			if (thisClientID == 0) {
+				clientType = "Upstream";
+				executeUpStream();
+			} else {
+				clientType = "Downstream";
+				executeDownStream();
+			}			
+		} catch (ClassNotFoundException | IOException e1) {
+			e1.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Client To Server exchange
+	 */
+	public void executeUpStream() {
+		/*
+		 * Client teilt Server Profile mit
+		 * Sever wartet danach auf ein erneutes schreiben auf den Socket
+		 */
+		try {
+			nextClientID++;
+			outToClientStream.writeObject(nextClientID);
 
-			LoadedProfile inFromClientObject = (LoadedProfile) inFromClientStream.readObject();
-			System.out.println(inFromClientObject.getProfileName() + " wurde empfangen.");
-
-			loadedProfile = inFromClientObject;
-
-			if (loadedProfile.getClientID() == 0) loadedProfile.setClientID(nextClientID);
-			storedData.addProfile(loadedProfile);
-			
-			serverToClientMessage.setNextClientID(nextClientID);
-			serverToClientMessage.setLoadedProfileList(storedData.getLoadedProfileList());
-		} catch (IOException e) {
-			System.out.println("IOException, Fehler beim lesen der Nachricht vom Client");
-		} catch (ClassNotFoundException e) {
-			//e.printStackTrace();
-		} finally {
-			try {
-				outToClientStream.writeObject(this.serverToClientMessage);
-				System.out.println("Client Handler is done");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			if (!client.isClosed()) {
-				System.out.println("Client wird vom Server geschlossen.");
+			while (true) {
 				try {
-					client.close();
-				} catch (IOException e) {
-					//eh
+					//New Value gets collected by the Observer
+					loadedProfile = (LoadedProfile) inFromClientStream.readObject();
+					notifyObservers();
+					
+					//evtl affirmation schicken, dass alles gut ist
+				} catch (ClassNotFoundException | IOException e) {
+					e.printStackTrace();
+					break;
 				}
 			}
-			System.out.println("=================");
+			
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
+	}
+	
+	
+	public void executeDownStream() {
+		//immer wenn der observer den handler anschubst
+		//also den entsprechenden bool wert auf true setzt
+		
+		while (true) {
+			try {
+				Thread.sleep(1000);
+				if (newProfilesAvailable) {
+					newProfilesAvailable = false;
+					serverToClientMessage.setLoadedProfileList(storedData.getLoadedProfileList());
+					outToClientStream.writeObject(this.serverToClientMessage);
+				}
+			} catch (InterruptedException | IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public LoadedProfile getLoadedProfile() {
+		return this.loadedProfile;
+	}
+	
+	public String getStatusMessage() {
+		return statusMessage;
+	}
+	
+	public String getClientType() {
+		return this.clientType;
+	}
+	
+	public void updateStoredData(StoredData storedData) {
+		this.storedData = storedData;
+	}
+	
+	public void setMessage(ConcurrentLinkedQueue<LoadedProfile> serverToClientMessage_allProfiles) {
+		
+	}
+	
+	public void setNewProfilesAvailable(boolean newProfilesAvailable) {
+		this.newProfilesAvailable = newProfilesAvailable;
 	}
 }

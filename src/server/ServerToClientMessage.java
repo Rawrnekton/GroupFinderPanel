@@ -11,14 +11,16 @@ public class ServerToClientMessage implements Serializable{
 	 * to make it writable onto a socket 
 	 */
 	private static final long serialVersionUID = -4555583242112908918L;
+	
 	private int nextClientID;
 	private LinkedList<LoadedProfile> loadedProfileList;
 
-	public ServerToClientMessage() {
+	public ServerToClientMessage(int nextClientID) {
 		loadedProfileList = new LinkedList<LoadedProfile>();
-		nextClientID = 0;
+		this.nextClientID = nextClientID;
 	}
 	
+	/* ---------- SET-METHODS ---------- */
 	public LinkedList<LoadedProfile> getLoadedProfileList() {
 		return this.loadedProfileList;
 	}
@@ -26,11 +28,8 @@ public class ServerToClientMessage implements Serializable{
 		return this.nextClientID;
 	}
 	
+	/* ---------- GET-METHODS ---------- */
 	public void setLoadedProfileList(LinkedList<LoadedProfile> loadedProfileList) {
 		this.loadedProfileList = loadedProfileList;
 	}
-	public void setNextClientID(int nextClientID) {
-		this.nextClientID = nextClientID;
-	}
-	
 }

@@ -10,8 +10,6 @@ import client.view.profilemanagingwindow.LoadedProfile;
 public class StoredData {
 
 	private LinkedList<LoadedProfile> loadedProfileList = new LinkedList<LoadedProfile>();
-
-	
 	
 	public StoredData() {
 
@@ -24,7 +22,7 @@ public class StoredData {
 	 * fügt der Profilliste ein neues Profil hinzu und löscht die ältere version, auch wenn diese nicht anders ist
 	 * test auf identität scheint nicht nur aufwendiger sonern auch ineffizienter
 	 * evtl profile erstelldatum angeben?
-	 */
+	 *//*
 	public void addProfile(LoadedProfile loadedProfile) {
 		for (int i = 0; i < loadedProfileList.size(); i++) {
 			if(loadedProfileList.get(i).getClientID() == loadedProfile.getClientID()) {
@@ -34,5 +32,5 @@ public class StoredData {
 		}
 
 		loadedProfileList.add(loadedProfile);
-	}
+	}*/
 }

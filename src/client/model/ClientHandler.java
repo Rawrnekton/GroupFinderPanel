@@ -9,7 +9,7 @@ import java.util.concurrent.Callable;
 class ClientHandler implements Callable<Object> {
 
 	private String ip = "127.0.0.1"; // "vigor-mortis.ddns.net"; //will be configurable via profile
-	private int port = 2709; //is already registered and used by Supermon
+	private int port = 2709;
 
 	Object clientMessage;
 
