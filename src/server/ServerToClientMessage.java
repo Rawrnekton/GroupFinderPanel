@@ -5,6 +5,11 @@ import java.util.LinkedList;
 
 import client.view.profilemanagingwindow.LoadedProfile;
 
+/**
+ * Simple Message Class that should be used once and then be discarded
+ * @author jonathan
+ *
+ */
 public class ServerToClientMessage implements Serializable{
 
 	/**

@@ -6,15 +6,9 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import client.view.profilemanagingwindow.LoadedProfile;
 
 /*
  * Klasse zum starten des Wetter-Server der sich um die Clients kümmert
@@ -51,8 +45,9 @@ class NetworkService implements Runnable, Observer {
 	//private final ExecutorService pool;
 	private final boolean PIGS_DONT_FLY = true;
 	private LinkedList<Handler> allClientHandler;
+	//private LinkedList<Integer> toBeRemovedClients;
 	
-	private StoredData storedData;
+	public StoredData storedData;
 
 	public NetworkService(ServerSocket serverSocket) {
 		this.serverSocket = serverSocket;
@@ -63,10 +58,25 @@ class NetworkService implements Runnable, Observer {
 	public void run() {
 		try {
 			while (PIGS_DONT_FLY) {
+				/*
+				 * Wait for new Clients
+				 */
 				Socket cs = serverSocket.accept();
 				System.out.println("New socket established.");
-				Handler ClientHandler = new Handler(cs, this);
-				allClientHandler.add(ClientHandler);
+
+				/*
+				 * Create ClientHandler and
+				 * Save them in the LinkedList for Future Refernce (mostly to send them the ServerToClientMessage)
+				 */
+				Handler clientHandler = new Handler(cs, this);
+				allClientHandler.add(clientHandler);
+				
+				/*
+				 * Create and start a Thread for the ClientHandler
+				 */
+				Thread clientHandlerThread = new Thread(clientHandler);
+				clientHandlerThread.start();
+				
 			}
 		} catch (IOException e) {
 			System.out.println("Interrupt NetworkService-run");
@@ -75,18 +85,47 @@ class NetworkService implements Runnable, Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		int clientHandlerSize = allClientHandler.size();
 		storedData.getLoadedProfileList().clear();
-		for( int index = 0; index < clientHandlerSize; index++) {
-			//bau die zu sendenden daten (einfach: durch alle upstreams gehen und einmal alle profile einsammeln)
-			//dann senden
+		
+		int clientHandlerSize = allClientHandler.size();
+		for(int index = 0; index < clientHandlerSize; index++) {
+			//bau die zu sendenden daten (einfach: durch alle upstreams gehen und einmal alle profile einsammeln, aber teuer)
+			//besseres System zum aktuell halten der Profile finden //TODO
 			if(allClientHandler.get(index).getClientType().equals("Upstream")) {
 				storedData.getLoadedProfileList().add(allClientHandler.get(index).getLoadedProfile());
 			}
 		}
+		/**
+		 * Debug Info:
+		 */
+		System.out.println("DEBUG: " + storedData.getLoadedProfileList().size() + " Profiles are recognized.");
+		for (int index = 0; index < storedData.getLoadedProfileList().size(); index++) {
+			System.out.println(storedData.getLoadedProfileList().get(index));
+		}
+		//dann senden
+		for(int index = 0; index < clientHandlerSize; index++) {
+			if(allClientHandler.get(index).getClientType().equals("Downstream")) {
+				//profile bereitstellen in der server to client message
+				allClientHandler.get(index).setNewProfilesAvailable(true);
+			}
+		}
+	}
+	
+	public void removeHandler(Handler toBeRemoved) {
+		int clientHandlerSize = allClientHandler.size();
+		for(int index = 0; index < clientHandlerSize; index++) {
+			if (allClientHandler.get(index).getClientID() == toBeRemoved.getClientID()) {
+				allClientHandler.remove(index);
+			}
+		}
+	}
+	
+	public void updateStoredClients() {
+		
 	}
 }
 
+/*
 class ClientUpdateService implements Runnable, Observer {
 	
 	private ConcurrentLinkedQueue<LoadedProfile> serverToClientMessage_allProfiles;
@@ -105,4 +144,4 @@ class ClientUpdateService implements Runnable, Observer {
 
 	}
 }
-
+*/

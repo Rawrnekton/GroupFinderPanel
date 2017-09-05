@@ -13,7 +13,6 @@ import javafx.stage.Stage;
 public class GFPClient extends Application implements Observer{
 	
 	public static void main(String[] args) {
-			
 		launch(args);
 	}
 

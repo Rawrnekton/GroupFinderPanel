@@ -17,7 +17,7 @@ public class Handler extends Observable implements Runnable {
 	private ObjectOutputStream outToClientStream;
 	
 	private LoadedProfile loadedProfile;
-	private StoredData storedData;
+	//private StoredData storedData;
 	private ServerToClientMessage serverToClientMessage;
 	
 	
@@ -28,7 +28,7 @@ public class Handler extends Observable implements Runnable {
 	private boolean newProfilesAvailable;
 	
 	private static int nextClientID = 0;
-	private int thisClientID;
+	private int clientID;
 	/*
 	 * Either Upstream or Downstream
 	 * Um es zu vereinfachen: der server ist oben
@@ -66,7 +66,7 @@ public class Handler extends Observable implements Runnable {
 		System.out.println(statusMessage);
 		
 		try {
-			thisClientID = (int) inFromClientStream.readObject();
+			clientID = (int) inFromClientStream.readObject();
 
 			/*
 			 * if ID is zero: this is the first thread that the client connected with
@@ -75,7 +75,7 @@ public class Handler extends Observable implements Runnable {
 			 * 
 			 * setup here is slightly hacky tbh
 			 */
-			if (thisClientID == 0) {
+			if (clientID == 0) {
 				clientType = "Upstream";
 				executeUpStream();
 			} else {
@@ -88,7 +88,7 @@ public class Handler extends Observable implements Runnable {
 	}
 	
 	/**
-	 * Client To Server exchange
+	 * Client To Server Stream
 	 */
 	public void executeUpStream() {
 		/*
@@ -103,22 +103,25 @@ public class Handler extends Observable implements Runnable {
 				try {
 					//New Value gets collected by the Observer
 					loadedProfile = (LoadedProfile) inFromClientStream.readObject();
+					setChanged();
 					notifyObservers();
 					
-					//evtl affirmation schicken, dass alles gut ist
+					//evtl affirmation schicken, if all good
 				} catch (ClassNotFoundException | IOException e) {
 					e.printStackTrace();
+					networkServiceThread.removeHandler(this);
 					break;
 				}
 			}
 			
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}
 	
-	
+	/**
+	 * Server to Client Stream
+	 */
 	public void executeDownStream() {
 		//immer wenn der observer den handler anschubst
 		//also den entsprechenden bool wert auf true setzt
@@ -128,15 +131,18 @@ public class Handler extends Observable implements Runnable {
 				Thread.sleep(1000);
 				if (newProfilesAvailable) {
 					newProfilesAvailable = false;
-					serverToClientMessage.setLoadedProfileList(storedData.getLoadedProfileList());
+					serverToClientMessage.setLoadedProfileList(networkServiceThread.storedData.getLoadedProfileList()); //storedData.getLoadedProfileList());
 					outToClientStream.writeObject(this.serverToClientMessage);
 				}
 			} catch (InterruptedException | IOException e) {
 				e.printStackTrace();
+				networkServiceThread.removeHandler(this);
+				break;
 			}
 		}
 	}
 	
+	/* ---------- GET-METHODS ---------- */
 	public LoadedProfile getLoadedProfile() {
 		return this.loadedProfile;
 	}
@@ -149,8 +155,8 @@ public class Handler extends Observable implements Runnable {
 		return this.clientType;
 	}
 	
-	public void updateStoredData(StoredData storedData) {
-		this.storedData = storedData;
+	public int getClientID() {
+		return this.clientID;
 	}
 	
 	public void setMessage(ConcurrentLinkedQueue<LoadedProfile> serverToClientMessage_allProfiles) {

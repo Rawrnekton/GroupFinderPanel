@@ -12,8 +12,8 @@ public class ClientBase {
 		
 		try {
 			@SuppressWarnings("unused")
-			ClientBase ksClient;
-			ksClient = new ClientBase(new LoadedProfile("Profil 1"));
+			ClientBase clientBase;
+			clientBase = new ClientBase(new LoadedProfile("Profil 1"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
