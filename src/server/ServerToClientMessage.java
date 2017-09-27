@@ -17,24 +17,27 @@ public class ServerToClientMessage implements Serializable{
 	 */
 	private static final long serialVersionUID = -4555583242112908918L;
 	
-	private int nextClientID;
+	private int clientID;
 	private LinkedList<LoadedProfile> loadedProfileList;
 
-	public ServerToClientMessage(int nextClientID) {
+	public ServerToClientMessage() {
 		loadedProfileList = new LinkedList<LoadedProfile>();
-		this.nextClientID = nextClientID;
 	}
 	
-	/* ---------- SET-METHODS ---------- */
+	/* ---------- GET-METHODS ---------- */
 	public LinkedList<LoadedProfile> getLoadedProfileList() {
 		return this.loadedProfileList;
 	}
 	public int getNextClientID() {
-		return this.nextClientID;
+		return this.clientID;
 	}
 	
-	/* ---------- GET-METHODS ---------- */
+	/* ---------- SET-METHODS ---------- */
 	public void setLoadedProfileList(LinkedList<LoadedProfile> loadedProfileList) {
 		this.loadedProfileList = loadedProfileList;
+	}
+	
+	public void setClientID(int clientID) {
+		this.clientID = clientID;
 	}
 }

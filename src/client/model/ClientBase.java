@@ -11,9 +11,10 @@ public class ClientBase {
 	public static void main(String args[]) {
 		
 		try {
-			@SuppressWarnings("unused")
 			ClientBase clientBase;
 			clientBase = new ClientBase(new LoadedProfile("Profil 1"));
+			clientBase.worker();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -21,7 +22,6 @@ public class ClientBase {
 
 	public ClientBase(Object clientProfile) throws Exception {
 		this.clientMessage = clientProfile;
-		this.worker();
 	}
 	
 	private void worker() throws Exception {

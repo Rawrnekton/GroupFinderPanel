@@ -10,6 +10,8 @@ import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 
+import client.view.profilemanagingwindow.LoadedProfile;
+
 /*
  * Klasse zum starten des Wetter-Server der sich um die Clients kümmert
  */
@@ -23,36 +25,40 @@ public class GFPServer {
 		try {
 			serverSocket = new ServerSocket(port);
 		} catch (IOException e) {
-			System.out.println("Ein anderer Service läuft bereits auf diesem Port, bitte schließen um diesen zu starten!");
+			System.out.println(
+					"Ein anderer Service läuft bereits auf diesem Port, bitte schließen um diesen zu starten!");
 			System.exit(1);
 		}
 
 		/*
-		Thread clientUpdateService = new Thread(new ClientUpdateService(serverSocket));
-		System.out.println("Network service succesfully started, can now receive and process requests.");
-		clientUpdateService.start();
-		*/
-		
-		Thread networkServiceThread = new Thread(new NetworkService(serverSocket));
+		 * Thread clientUpdateService = new Thread(new
+		 * ClientUpdateService(serverSocket)); System.out.
+		 * println("Network service succesfully started, can now receive and process requests."
+		 * ); clientUpdateService.start();
+		 */
+
+		Thread networkServiceThread = new Thread(new NetworkService(serverSocket), "networkServiceThread");
 		System.out.println("Network service succesfully started, can now receive and process requests.");
 		networkServiceThread.start();
 	}
 }
 
 class NetworkService implements Runnable, Observer {
-	
+
 	private final ServerSocket serverSocket;
 	//private final ExecutorService pool;
 	private final boolean PIGS_DONT_FLY = true;
-	private LinkedList<Handler> allClientHandler;
+	private LinkedList<Handler> allServerToClientHandler;
+	private LinkedList<LoadedProfile> clientProfiles;
 	//private LinkedList<Integer> toBeRemovedClients;
-	
-	public StoredData storedData;
+
+	//	public StoredData storedData;
 
 	public NetworkService(ServerSocket serverSocket) {
 		this.serverSocket = serverSocket;
-		this.allClientHandler = new LinkedList<Handler>();
-		this.storedData = new StoredData();
+		this.allServerToClientHandler = new LinkedList<Handler>();
+		this.clientProfiles = new LinkedList<LoadedProfile>();
+		//		this.storedData = new StoredData();
 	}
 
 	public void run() {
@@ -62,86 +68,118 @@ class NetworkService implements Runnable, Observer {
 				 * Wait for new Clients
 				 */
 				Socket cs = serverSocket.accept();
-				System.out.println("New socket established.");
-
+				lib.Debug.debug(this, "new socket established", false);
 				/*
-				 * Create ClientHandler and
-				 * Save them in the LinkedList for Future Refernce (mostly to send them the ServerToClientMessage)
+				 * Create ClientHandler and Save them in the LinkedList for
+				 * Future Refernce (mostly to send them the
+				 * ServerToClientMessage)
 				 */
 				Handler clientHandler = new Handler(cs, this);
-				allClientHandler.add(clientHandler);
-				
+				//allServerToClientHandler.add(clientHandler);
+
 				/*
 				 * Create and start a Thread for the ClientHandler
 				 */
-				Thread clientHandlerThread = new Thread(clientHandler);
+				Thread clientHandlerThread = new Thread(clientHandler, "clientHandler");
 				clientHandlerThread.start();
-				
+
 			}
 		} catch (IOException e) {
 			System.out.println("Interrupt NetworkService-run");
 		}
 	}
 
+	/*
+	 * gets called whenever an upstream Client sends a profile (a check if the
+	 * profile is new does not happen) (non-Javadoc)
+	 * 
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
 	@Override
 	public void update(Observable o, Object arg) {
-		storedData.getLoadedProfileList().clear();
-		
-		int clientHandlerSize = allClientHandler.size();
-		for(int index = 0; index < clientHandlerSize; index++) {
-			//bau die zu sendenden daten (einfach: durch alle upstreams gehen und einmal alle profile einsammeln, aber teuer)
-			//besseres System zum aktuell halten der Profile finden //TODO
-			if(allClientHandler.get(index).getClientType().equals("Upstream")) {
-				storedData.getLoadedProfileList().add(allClientHandler.get(index).getLoadedProfile());
-			}
+
+		LoadedProfile newProfile;
+		if (arg instanceof LoadedProfile) {
+			newProfile = (LoadedProfile) arg;
+		} else {
+			return;
 		}
+
+		lib.Debug.debug(this, "profilename: " + "\"" + newProfile.getProfileName() + "\"", false);
+
 		/**
-		 * Debug Info:
+		 * Zusammensetzen der aktuellen Profilliste
 		 */
-		System.out.println("DEBUG: " + storedData.getLoadedProfileList().size() + " Profiles are recognized.");
-		for (int index = 0; index < storedData.getLoadedProfileList().size(); index++) {
-			System.out.println(storedData.getLoadedProfileList().get(index));
-		}
-		//dann senden
-		for(int index = 0; index < clientHandlerSize; index++) {
-			if(allClientHandler.get(index).getClientType().equals("Downstream")) {
-				//profile bereitstellen in der server to client message
-				allClientHandler.get(index).setNewProfilesAvailable(true);
+
+		int loadedProfilesCount = clientProfiles.size();
+		for (int index = 0; index < loadedProfilesCount; index++) {
+			if (clientProfiles.get(index).getClientID() == newProfile.getClientID()) {
+				lib.Debug.debug(this, "trying to delete profile with ID " + newProfile.getClientID() + " at index " + index, true);
+				try {
+					clientProfiles.remove(index);
+				} catch (IndexOutOfBoundsException e) {
+					lib.Debug.debug(this, "yeah whatever", false);
+				}
 			}
 		}
-	}
-	
-	public void removeHandler(Handler toBeRemoved) {
-		int clientHandlerSize = allClientHandler.size();
-		for(int index = 0; index < clientHandlerSize; index++) {
-			if (allClientHandler.get(index).getClientID() == toBeRemoved.getClientID()) {
-				allClientHandler.remove(index);
-			}
-		}
-	}
-	
-	public void updateStoredClients() {
 		
+		clientProfiles.add(newProfile);
+		lib.Debug.debug(this, "clientProfiles = " + clientProfiles.size());
+		lib.Debug.debug(this, getProfileOverview(), true);
+		/**
+		 * Senden der aktuellen Profilliste, bzw notifizieren dass eine neue
+		 * Profilliste da ist
+		 */
+		int serverToClientHandlerCount = allServerToClientHandler.size();
+		lib.Debug.debug(this, "serverToClientHandlerCount = " + serverToClientHandlerCount, false);
+		for (int index = 0; index < serverToClientHandlerCount; index++) {
+			allServerToClientHandler.get(index).setNewProfilesAvailable(true);
+		}
 	}
+	
+	public String getProfileOverview() {
+		String returnString = "-- profile overview --\n";
+		int clientProfilesCount = clientProfiles.size();
+		
+		for (int index = 0; index < clientProfilesCount; index++) {
+			returnString += clientProfiles.get(index).getClientID() + "	| " + clientProfiles.get(index).getProfileName() + "	|\n";
+		}
+		
+		return returnString;
+	}
+
+	/* ---------- GET-METHODS ---------- */
+	public LinkedList<Handler> getAllServerToClientHandler() {
+		return this.allServerToClientHandler;
+	}
+
+	public LinkedList<LoadedProfile> getClientProfiles() {
+		return this.clientProfiles;
+	}
+	/*
+	 * public void removeHandler(Handler toBeRemoved) { int clientHandlerSize =
+	 * allServerToClientHandler.size(); for(int index = 0; index <
+	 * clientHandlerSize; index++) { if
+	 * (allServerToClientHandler.get(index).getClientID() ==
+	 * toBeRemoved.getClientID()) { allServerToClientHandler.remove(index); } }
+	 * }
+	 */
 }
 
 /*
-class ClientUpdateService implements Runnable, Observer {
-	
-	private ConcurrentLinkedQueue<LoadedProfile> serverToClientMessage_allProfiles;
-	
-	public ClientUpdateService(ServerSocket serverSocket) {
-		serverToClientMessage_allProfiles = new ConcurrentLinkedQueue<>();
-	}
-
-	@Override
-	public void run() {
-		
-	}
-
-	@Override
-	public void update(Observable o, Object arg) {
-
-	}
-}
-*/
+ * class ClientUpdateService implements Runnable, Observer {
+ * 
+ * private ConcurrentLinkedQueue<LoadedProfile>
+ * serverToClientMessage_allProfiles;
+ * 
+ * public ClientUpdateService(ServerSocket serverSocket) {
+ * serverToClientMessage_allProfiles = new ConcurrentLinkedQueue<>(); }
+ * 
+ * @Override public void run() {
+ * 
+ * }
+ * 
+ * @Override public void update(Observable o, Object arg) {
+ * 
+ * } }
+ */

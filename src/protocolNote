@@ -1,0 +1,10 @@
+premis: server is running
+
+
+client creates his serverToClientStream
+
+client tells server that he has no id (atm ID = 0)
+	server gives him an ID
+	server gives him all profiles
+
+client creates his clientToServerStream whenever he updates his profile
