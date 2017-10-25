@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;
 
-import client.model.Lib;
+import lib.Misc;
 
 /*
  * This should be moved somewhere else
@@ -102,7 +102,7 @@ public class LoadedProfile implements Serializable{
 		usedGameList = new LinkedList<String>();
 		unusedGameList = new LinkedList<String>();
 		
-		final String FILENAME = Lib.PROFILEPATH + usedProfil;
+		final String FILENAME = Misc.PROFILEPATH + usedProfil;
 		
 		BufferedReader br = null;
 		FileReader fr = null;
@@ -151,7 +151,7 @@ public class LoadedProfile implements Serializable{
 	}
 	
 	public void saveToFile(String toBeSaved) {
-		final String FILENAME = Lib.PROFILEPATH + profilName;
+		final String FILENAME = Misc.PROFILEPATH + profilName;
 		FileWriter write;
 		try {
 			write = new FileWriter(FILENAME, false);

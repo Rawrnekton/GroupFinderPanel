@@ -1,13 +1,13 @@
 package client.model.streamclients;
 
 import java.io.IOException;
-import java.net.SocketException;
 import java.util.LinkedList;
+
 import client.view.profilemanagingwindow.LoadedProfile;
 import lib.Debug;
 import server.ServerToClientMessage;
 
-class ServerToClientStreamClient extends ProtoClient {
+public class ServerToClientStreamClient extends ProtoClient {
 
 	protected LinkedList<LoadedProfile> allLoadedProfiles;
 
@@ -51,8 +51,7 @@ class ServerToClientStreamClient extends ProtoClient {
 		
 		try {
 			while (true) {
-				ServerToClientMessage serverMsg = null;
-				serverMsg = (ServerToClientMessage) leseNachrichtThrowingError(socket);
+				ServerToClientMessage serverMsg = (ServerToClientMessage) leseNachrichtThrowingError(socket);
 				allLoadedProfiles = serverMsg.getLoadedProfileList();
 				lib.Debug.debug("received profile count " + allLoadedProfiles.size());
 				

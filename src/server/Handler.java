@@ -137,8 +137,12 @@ public class Handler extends Observable implements Runnable {
 		try {
 			/*
 			 * optimize this to make removing things easier
+			 * server starts at 0 and then preincrements the ID everytime a new
+			 * Client connects
+			 * does not reuse id's yet and i believe it will stay that way because
+			 * there is no functionality lost
 			 */
-			clientID = nextClientID++;
+			clientID = ++nextClientID;
 			outToClientStream.writeObject(clientID);
 			lib.Debug.debug(this, "new clientID = " + clientID, true);
 			
@@ -171,11 +175,12 @@ public class Handler extends Observable implements Runnable {
 		/**
 		 * Wenn Clientverbindung abbricht, oder geschlossen wird, wird noch das
 		 * gespeicherte Profil des Clients gelöscht
-		 * 
-		 * //TODO andere downstreams anstupsen, dass "neue" profile da
+		 * andere downstreams anstupsen, dass "neue" profile da
 		 */
-
 		deleteProfilOf(clientID);
+
+		setChanged();
+		notifyObservers();
 	}
 
 	/**
@@ -184,6 +189,7 @@ public class Handler extends Observable implements Runnable {
 	 * @param clientID
 	 */
 	private void deleteProfilOf(int clientID) {
+		//TODO Write some basic functionality to test and make it robust, i dont want the server to freak out every time something goes wrong
 		int handlerAmount = networkServiceThread.getAllServerToClientHandler().size();
 		lib.Debug.debug(this, "handlerAmount = " + handlerAmount);
 		lib.Debug.debug(this, "to be deleted ID = " + clientID, true);

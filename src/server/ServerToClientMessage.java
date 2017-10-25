@@ -7,6 +7,9 @@ import client.view.profilemanagingwindow.LoadedProfile;
 
 /**
  * Simple Message Class that should be used once and then be discarded
+ * Is used atm only to convey the loadedProfiles, but i will either
+ * add more data that is transmitted to it, or come up with a way to
+ * only ever send this and let the client figure out what he received
  * @author jonathan
  *
  */

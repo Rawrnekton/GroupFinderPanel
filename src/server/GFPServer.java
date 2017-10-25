@@ -99,9 +99,18 @@ class NetworkService implements Runnable, Observer {
 	public void update(Observable o, Object arg) {
 
 		LoadedProfile newProfile;
-		if (arg instanceof LoadedProfile) {
+		/*
+		 * arg == null ist UNTESTED
+		 * so is the else
+		 */
+		if (arg instanceof LoadedProfile || arg == null) {
 			newProfile = (LoadedProfile) arg;
 		} else {
+			//tell the upstreams that they should update
+			int serverToClientHandlerCount = allServerToClientHandler.size();
+			for (int index = 0; index < serverToClientHandlerCount; index++) {
+				allServerToClientHandler.get(index).setNewProfilesAvailable(true);
+			}
 			return;
 		}
 
@@ -132,6 +141,8 @@ class NetworkService implements Runnable, Observer {
 		 */
 		int serverToClientHandlerCount = allServerToClientHandler.size();
 		lib.Debug.debug(this, "serverToClientHandlerCount = " + serverToClientHandlerCount, false);
+		
+		//tell the upstreams that they should update
 		for (int index = 0; index < serverToClientHandlerCount; index++) {
 			allServerToClientHandler.get(index).setNewProfilesAvailable(true);
 		}

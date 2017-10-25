@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.Observable;
 import java.util.Observer;
 
-import client.model.Lib;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,6 +22,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import lib.Misc;
 
 public class ProfileManagingWindowBase extends Observable {
 
@@ -44,10 +44,10 @@ public class ProfileManagingWindowBase extends Observable {
 	HBox profileManagementStageTopPane;
 	GridPane profileManagementStageCenterPane;
 	GridPane profileManagementStageBottomPane;
+	
 	/*
 	 * Buttons, Labels and Textfields
 	 */
-
 	ObservableList<String> profileNames;
 	ComboBox<String> selectedProfileComboBox;
 	String[] listOfProfiles;
@@ -138,7 +138,7 @@ public class ProfileManagingWindowBase extends Observable {
 		deleteProfileButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				File toBeDeleted = new File(Lib.PROFILEPATH + selectedProfileComboBox.getValue());
+				File toBeDeleted = new File(Misc.PROFILEPATH + selectedProfileComboBox.getValue());
 				selectedProfileComboBox.getSelectionModel().selectFirst();
 				toBeDeleted.delete();
 				
@@ -331,14 +331,15 @@ public class ProfileManagingWindowBase extends Observable {
 	}
 
 	private void updateComboBoxContent() {
-		File folder = new File(Lib.PROFILEPATH);
+		File folder = new File(Misc.PROFILEPATH);
 		File[] listOfProfileFiles = folder.listFiles();
 		listOfProfiles = new String[listOfProfileFiles.length];
-		for (int i = 0; i < listOfProfileFiles.length; i++) {
-			if (listOfProfileFiles[i].isFile()) {
+		for (int index = 0; index < listOfProfileFiles.length; index++) {
+			if (listOfProfileFiles[index].isFile()) {
 				//System.out.println("File " + listOfProfileFiles[i].getName());
-				listOfProfiles[i] = listOfProfileFiles[i].getName();
-			} else if (listOfProfileFiles[i].isDirectory()) {
+				listOfProfiles[index] = listOfProfileFiles[index].getName();
+			} else if (listOfProfileFiles[index].isDirectory()) {
+				listOfProfiles[index] = null;
 				//TODO should be changed to actually prevent it from crashing if a directory is found here
 				//System.out.println("Directory " + listOfProfileFiles[i].getName());
 			}

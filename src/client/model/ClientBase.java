@@ -11,10 +11,8 @@ public class ClientBase {
 	public static void main(String args[]) {
 		
 		try {
-			ClientBase clientBase;
-			clientBase = new ClientBase(new LoadedProfile("Profil 1"));
+			ClientBase clientBase = new ClientBase(new LoadedProfile("Profil 1"));
 			clientBase.worker();
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

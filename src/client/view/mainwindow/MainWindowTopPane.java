@@ -18,6 +18,7 @@ public class MainWindowTopPane extends HBox {
 	public MainWindowTopPane(Stage primaryStage, Observer observer) {
 		this.observer = observer;
 		this.primaryStage = primaryStage;
+		
 		/*
 		 * create button setText setOnAction setAttributes?
 		 */
