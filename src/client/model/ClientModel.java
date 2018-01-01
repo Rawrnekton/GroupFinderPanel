@@ -4,21 +4,25 @@ import java.util.concurrent.FutureTask;
 
 import client.view.profilemanagingwindow.LoadedProfile;
 
-public class ClientBase {
+public class ClientModel {
 
 	private Object clientMessage;
 	
 	public static void main(String args[]) {
 		
 		try {
-			ClientBase clientBase = new ClientBase(new LoadedProfile("Profil 1"));
+			ClientModel clientBase = new ClientModel(new LoadedProfile("Profil 1"));
 			clientBase.worker();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public ClientBase(Object clientProfile) throws Exception {
+	public ClientModel() {
+		clientMessage = null;
+	}
+	
+	public ClientModel(Object clientProfile) throws Exception {
 		this.clientMessage = clientProfile;
 	}
 	

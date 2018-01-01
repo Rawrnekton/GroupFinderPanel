@@ -8,6 +8,11 @@ public class ClientToServerStreamClient extends ProtoClient{
 
 	private LoadedProfile currentlyLoadedProfile;
 	
+	/**
+	 * Test Main Function
+	 * Usable to test StreamClientConnection
+	 * @param args not used
+	 */
 	public static void main(String args[]) {
 		for(int index = 0; index < 1; index++) {
 			int clientID = 17 + index;

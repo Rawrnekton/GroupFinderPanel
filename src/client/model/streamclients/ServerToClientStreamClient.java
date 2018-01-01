@@ -57,14 +57,14 @@ public class ServerToClientStreamClient extends ProtoClient {
 				
 				String debugString = "\n";
 				for (int index = 0; index < allLoadedProfiles.size(); index++) {
-					debugString += allLoadedProfiles.get(index).getClientID() + "	| " + allLoadedProfiles.get(index).getProfileName() + "	|\n";
+					debugString += allLoadedProfiles.get(index).getClientID() + "	| " 
+							+ allLoadedProfiles.get(index).getProfileName() + "	|\n";
 				}
 				
 				Debug.debug(debugString);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-			Debug.debug("meh");
 		}
 	}
 

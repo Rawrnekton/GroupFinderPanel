@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Observable;
-import java.util.Observer;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,7 +29,6 @@ public class ProfileManagingWindowBase extends Observable {
 	 * Misc Attributes
 	 */
 	LoadedProfile selectedProfile;
-	Observer observer;
 	Stage primaryStage;
 
 	/*
@@ -51,27 +49,26 @@ public class ProfileManagingWindowBase extends Observable {
 	ObservableList<String> profileNames;
 	ComboBox<String> selectedProfileComboBox;
 	String[] listOfProfiles;
-	Button saveButton;
-	Button applyProfileButton;
-	Button deleteProfileButton;
+	Button saveBtn;
+	Button applyProfileBtn;
+	Button deleteProfileButton; //add rightclickaction to game buttons to delete them, after they've been deselected
+	Button newGameBtn;
 
 	Label userNameLabel;
-	TextField userNameTextField;
 	Label serverAddressLabel;
-	TextField serverAddressTextField;
 	Label serverPasswordLabel;
-	TextField serverPasswordTextField;
 	Label groupNameLabel;
-	TextField groupNameTextField;
 	Label newGameLabel;
+
+	TextField userNameTextField;
+	TextField serverAddressTextField;
+	TextField serverPasswordTextField;
+	TextField groupNameTextField;
 	TextField newGameTextField;
-	Button newGameButton;
 
-	public ProfileManagingWindowBase(Stage primaryStage, Observer observer) {
-		this.observer = observer;
+	public ProfileManagingWindowBase(Stage primaryStage) {
 		this.primaryStage = primaryStage;
-		addObserver(observer);
-
+		
 		profileManagementStage = new Stage();
 		profileManagementStageMainPane = new BorderPane();
 		profileManagementStageTopPane = new HBox();
@@ -83,14 +80,15 @@ public class ProfileManagingWindowBase extends Observable {
 		selectedProfileComboBox = new ComboBox<String>();
 		selectedProfileComboBox.setPromptText("Unbench the Kench");
 		selectedProfileComboBox.setEditable(true);
-		selectedProfileComboBox.setOnAction(new EventHandler<ActionEvent>() {
+		/*selectedProfileComboBox.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				selectedProfile = new LoadedProfile(selectedProfileComboBox.getValue());
 				setTextFields();
 				setBottomPane();
 			}
-		});
+		}); * /
+
 		profileManagementStageTopPane.getChildren().add(selectedProfileComboBox);
 		updateComboBoxContent();
 		selectedProfileComboBox.getSelectionModel().selectFirst();
@@ -98,10 +96,10 @@ public class ProfileManagingWindowBase extends Observable {
 			selectedProfile = new LoadedProfile("profilTemplate");
 		} else {
 			selectedProfile = new LoadedProfile(selectedProfileComboBox.getValue());
-		}
+		}*/
 
-		saveButton = new Button("Save Profile");
-		saveButton.setOnAction(new EventHandler<ActionEvent>() {
+		saveBtn = new Button("Save Profile");
+		saveBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 
@@ -116,10 +114,10 @@ public class ProfileManagingWindowBase extends Observable {
 				updateComboBoxContent();
 			}
 		});
-		profileManagementStageTopPane.getChildren().add(saveButton);
+		profileManagementStageTopPane.getChildren().add(saveBtn);
 
-		applyProfileButton = new Button("Apply");
-		applyProfileButton.setOnAction(new EventHandler<ActionEvent>() {
+		applyProfileBtn = new Button("Apply");
+		applyProfileBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				selectedProfile.setProfilName(selectedProfileComboBox.getEditor().getText());
@@ -127,12 +125,9 @@ public class ProfileManagingWindowBase extends Observable {
 				selectedProfile.setServerAdress(serverAddressTextField.getText());
 				selectedProfile.setGroupName(groupNameTextField.getText());
 				selectedProfile.setServerPassword(serverPasswordTextField.getText());
-
-				setChanged();
-				notifyObservers(selectedProfile);
 			}
 		});
-		profileManagementStageTopPane.getChildren().add(applyProfileButton);
+		profileManagementStageTopPane.getChildren().add(applyProfileBtn);
 
 		deleteProfileButton = new Button("Delete Profile");
 		deleteProfileButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -174,10 +169,10 @@ public class ProfileManagingWindowBase extends Observable {
 		profileManagementStageCenterPane.add(newGameLabel, 0, 4);
 		newGameTextField = new TextField();
 		profileManagementStageCenterPane.add(newGameTextField, 1, 4);
-		newGameButton = new Button("Add");
-		profileManagementStageCenterPane.add(newGameButton, 2, 4);
+		newGameBtn = new Button("Add");
+		profileManagementStageCenterPane.add(newGameBtn, 2, 4);
 
-		newGameButton.setOnAction(new EventHandler<ActionEvent>() {
+		newGameBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				if (newGameTextField.getText().isEmpty())
@@ -349,4 +344,26 @@ public class ProfileManagingWindowBase extends Observable {
 		
 		selectedProfileComboBox.setItems(profileNames);
 	}
+	
+	/* ---------- EventHandle-Setter ---------- */
+	
+	public void setSaveBtn(EventHandler<ActionEvent> eventHandler) {
+		this.saveBtn.setOnAction(eventHandler);
+	}
+	
+	public void setApplyProfileBtn(EventHandler<ActionEvent> eventHandler) {
+		this.applyProfileBtn.setOnAction(eventHandler);
+	}
+	
+	public void setDeleteProfileBtn(EventHandler<ActionEvent> eventHandler) {
+		this.deleteProfileButton.setOnAction(eventHandler);
+	}
+	
+	public void setNewGameBtnAction(EventHandler<ActionEvent> eventHandler) {
+		this.newGameBtn.setOnAction(eventHandler);
+	}
+	
+	public void setSelectedProfileComboBoxAction(EventHandler<ActionEvent> eventHandler) {
+		this.selectedProfileComboBox.setOnAction(eventHandler);
+	}	
 }
