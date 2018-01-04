@@ -80,14 +80,14 @@ public class ProfileManagingWindowBase extends Observable {
 		selectedProfileComboBox = new ComboBox<String>();
 		selectedProfileComboBox.setPromptText("Unbench the Kench");
 		selectedProfileComboBox.setEditable(true);
-		/*selectedProfileComboBox.setOnAction(new EventHandler<ActionEvent>() {
+		selectedProfileComboBox.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				selectedProfile = new LoadedProfile(selectedProfileComboBox.getValue());
 				setTextFields();
 				setBottomPane();
 			}
-		}); * /
+		});
 
 		profileManagementStageTopPane.getChildren().add(selectedProfileComboBox);
 		updateComboBoxContent();
@@ -96,7 +96,7 @@ public class ProfileManagingWindowBase extends Observable {
 			selectedProfile = new LoadedProfile("profilTemplate");
 		} else {
 			selectedProfile = new LoadedProfile(selectedProfileComboBox.getValue());
-		}*/
+		}
 
 		saveBtn = new Button("Save Profile");
 		saveBtn.setOnAction(new EventHandler<ActionEvent>() {

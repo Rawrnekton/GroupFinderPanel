@@ -4,6 +4,7 @@ import java.util.Observable;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class TestWindow extends Observable {
@@ -13,10 +14,6 @@ public class TestWindow extends Observable {
 	Scene scene;
 	Stage profileManagementStage;
 	BorderPane profileManagementStageMainPane;
-	
-	public static void main(String[] args) {
-		TestWindow test = new TestWindow(new Stage());
-	}
 	
 	public TestWindow(Stage primaryStage) {
 		this.primaryStage = primaryStage;
@@ -29,6 +26,13 @@ public class TestWindow extends Observable {
 
 		scene = new Scene(profileManagementStageMainPane);
 
+		
+		
+		profileManagementStage.initModality(Modality.WINDOW_MODAL);
+		profileManagementStage.initOwner(primaryStage);
+		profileManagementStage.setTitle("Profile Manager");
+		profileManagementStage.setScene(scene);
+		profileManagementStage.show();
 	}
 	
 	
