@@ -11,6 +11,7 @@ import client.view.profilemanagingwindow.LoadedProfile;
 import client.view.profilemanagingwindow.ProfileManagingWindowBase;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import lib.Misc;
 
 
 public class GFPClient extends Application implements Observer{
@@ -38,7 +39,8 @@ public class GFPClient extends Application implements Observer{
 	public void start(Stage primaryStage) throws Exception {
 		
 		ClientView clientView = new ClientView(primaryStage, this);
-		ClientModel clientModel = new ClientModel();
+		String preLoadedProfile = Misc.LASTLOADEDPROFILE;
+		ClientModel clientModel = new ClientModel(preLoadedProfile);
 		
 		@SuppressWarnings("unused")
 		ClientController clientController = new ClientController(clientView, clientModel);

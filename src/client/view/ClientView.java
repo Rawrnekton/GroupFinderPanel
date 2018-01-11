@@ -3,6 +3,7 @@ package client.view;
 import java.util.Observer;
 
 import client.view.mainwindow.MainWindowBase;
+import client.view.profilemanagingwindow.ProfileManagingWindowBase;
 import javafx.stage.Stage;
 
 /*
@@ -12,6 +13,7 @@ import javafx.stage.Stage;
 public class ClientView{
 
 	private MainWindowBase mainWindowBase;
+	private ProfileManagingWindowBase profileManagingWindowBase;
 	private Stage primaryStage;
 	private Observer observer;
 	
@@ -20,6 +22,7 @@ public class ClientView{
 		this.primaryStage = primaryStage;
 		this.observer = observer;
 		this.mainWindowBase = new MainWindowBase(this.primaryStage, this.observer);
+		this.profileManagingWindowBase = null;
 	}
 	
 	public Stage getPrimaryStage() {
@@ -27,6 +30,15 @@ public class ClientView{
 	}
 	
 	public MainWindowBase getMainWindowBase() {
-		return this.mainWindowBase;
+		return mainWindowBase;
 	}
+
+	public ProfileManagingWindowBase getProfileManagingWindowBase() {
+		return profileManagingWindowBase;
+	}
+
+	public void setProfileManagingWindowBase(ProfileManagingWindowBase profileManagingWindowBase) {
+		this.profileManagingWindowBase = profileManagingWindowBase;
+	}
+	
 }

@@ -28,7 +28,7 @@ public class ProfileManagingWindowBase extends Observable {
 	/*
 	 * Misc Attributes
 	 */
-	LoadedProfile selectedProfile;
+	LoadedProfile loadedProfile;
 	Stage primaryStage;
 
 	/*
@@ -51,7 +51,7 @@ public class ProfileManagingWindowBase extends Observable {
 	String[] listOfProfiles;
 	Button saveBtn;
 	Button applyProfileBtn;
-	Button deleteProfileButton; //add rightclickaction to game buttons to delete them, after they've been deselected
+	Button deleteProfileButton;
 	Button newGameBtn;
 
 	Label userNameLabel;
@@ -80,66 +80,67 @@ public class ProfileManagingWindowBase extends Observable {
 		selectedProfileComboBox = new ComboBox<String>();
 		selectedProfileComboBox.setPromptText("Unbench the Kench");
 		selectedProfileComboBox.setEditable(true);
-		selectedProfileComboBox.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				selectedProfile = new LoadedProfile(selectedProfileComboBox.getValue());
-				setTextFields();
-				setBottomPane();
-			}
-		});
+//		selectedProfileComboBox.setOnAction(new EventHandler<ActionEvent>() {
+//			@Override
+//			public void handle(ActionEvent event) {
+//				selectedProfile = new LoadedProfile(selectedProfileComboBox.getValue());
+//				setTextFields();
+//				setBottomPane();
+//			}
+//		});
 
 		profileManagementStageTopPane.getChildren().add(selectedProfileComboBox);
-		updateComboBoxContent();
-		selectedProfileComboBox.getSelectionModel().selectFirst();
-		if (selectedProfileComboBox.getValue() == null) {
-			selectedProfile = new LoadedProfile("profilTemplate");
-		} else {
-			selectedProfile = new LoadedProfile(selectedProfileComboBox.getValue());
-		}
+//		updateComboBoxContent();
+//		selectedProfileComboBox.getSelectionModel().selectFirst();
+//		if (selectedProfileComboBox.getValue() == null) {
+//			selectedProfile = new LoadedProfile("profilTemplate");
+//		} else {
+//			selectedProfile = new LoadedProfile(selectedProfileComboBox.getValue());
+//		}
 
 		saveBtn = new Button("Save Profile");
-		saveBtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-
-				selectedProfile.setProfilName(selectedProfileComboBox.getEditor().getText());
-				selectedProfile.setUserName(userNameTextField.getText());
-				selectedProfile.setServerAdress(serverAddressTextField.getText());
-				selectedProfile.setGroupName(groupNameTextField.getText());
-				selectedProfile.setServerPassword(serverPasswordTextField.getText());
-
-				selectedProfile.saveToFile(selectedProfile.toString());
-
-				updateComboBoxContent();
-			}
-		});
+//		saveBtn.setOnAction(new EventHandler<ActionEvent>() {
+//			@Override
+//			public void handle(ActionEvent event) {
+//
+//				selectedProfile.setProfilName(selectedProfileComboBox.getEditor().getText());
+//				selectedProfile.setUserName(userNameTextField.getText());
+//				selectedProfile.setServerAdress(serverAddressTextField.getText());
+//				selectedProfile.setGroupName(groupNameTextField.getText());
+//				selectedProfile.setServerPassword(serverPasswordTextField.getText());
+//
+//				selectedProfile.saveToFile(selectedProfile.toString());
+//
+//				updateComboBoxContent();
+//			}
+//		});
+		
 		profileManagementStageTopPane.getChildren().add(saveBtn);
 
 		applyProfileBtn = new Button("Apply");
-		applyProfileBtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				selectedProfile.setProfilName(selectedProfileComboBox.getEditor().getText());
-				selectedProfile.setUserName(userNameTextField.getText());
-				selectedProfile.setServerAdress(serverAddressTextField.getText());
-				selectedProfile.setGroupName(groupNameTextField.getText());
-				selectedProfile.setServerPassword(serverPasswordTextField.getText());
-			}
-		});
+//		applyProfileBtn.setOnAction(new EventHandler<ActionEvent>() {
+//			@Override
+//			public void handle(ActionEvent event) {
+//				selectedProfile.setProfilName(selectedProfileComboBox.getEditor().getText());
+//				selectedProfile.setUserName(userNameTextField.getText());
+//				selectedProfile.setServerAdress(serverAddressTextField.getText());
+//				selectedProfile.setGroupName(groupNameTextField.getText());
+//				selectedProfile.setServerPassword(serverPasswordTextField.getText());
+//			}
+//		});
 		profileManagementStageTopPane.getChildren().add(applyProfileBtn);
 
 		deleteProfileButton = new Button("Delete Profile");
-		deleteProfileButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				File toBeDeleted = new File(Misc.PROFILEPATH + selectedProfileComboBox.getValue());
-				selectedProfileComboBox.getSelectionModel().selectFirst();
-				toBeDeleted.delete();
-				
-				updateComboBoxContent();
-			}
-		});
+//		deleteProfileButton.setOnAction(new EventHandler<ActionEvent>() {
+//			@Override
+//			public void handle(ActionEvent event) {
+//				File toBeDeleted = new File(Misc.PROFILEPATH + selectedProfileComboBox.getValue());
+//				selectedProfileComboBox.getSelectionModel().selectFirst();
+//				toBeDeleted.delete();
+//				
+//				updateComboBoxContent();
+//			}
+//		});
 		profileManagementStageTopPane.getChildren().add(deleteProfileButton);
 
 		/*
@@ -172,22 +173,22 @@ public class ProfileManagingWindowBase extends Observable {
 		newGameBtn = new Button("Add");
 		profileManagementStageCenterPane.add(newGameBtn, 2, 4);
 
-		newGameBtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				if (newGameTextField.getText().isEmpty())
-					return;
-				for (String s : selectedProfile.getUsedGameList())
-					if (s.equals(newGameTextField.getText()))
-						return;
+//		newGameBtn.setOnAction(new EventHandler<ActionEvent>() {
+//			@Override
+//			public void handle(ActionEvent event) {
+//				if (newGameTextField.getText().isEmpty())
+//					return;
+//				for (String s : selectedProfile.getUsedGameList())
+//					if (s.equals(newGameTextField.getText()))
+//						return;
+//
+//				selectedProfile.addGameToList(newGameTextField.getText());
+//				setBottomPane();
+//			}
+//		});
 
-				selectedProfile.addGameToList(newGameTextField.getText());
-				setBottomPane();
-			}
-		});
-
-		setTextFields();
-		setBottomPane();
+//		setTextFields();
+//		setBottomPane();
 
 		/*
 		 * View Setup, almost done maybe redo the spacing and the actual width
@@ -211,25 +212,33 @@ public class ProfileManagingWindowBase extends Observable {
 		profileManagementStageMainPane.setPadding(new Insets(5, 5, 5, 5));
 
 		//profileManagementStage.initStyle(StageStyle.UNDECORATED); //lul
-		profileManagementStage.initModality(Modality.WINDOW_MODAL);
+
 		profileManagementStage.initOwner(primaryStage);
+		
+		//Modailty.WINDOW_MODAL prevents actions on the owner
+		profileManagementStage.initModality(Modality.WINDOW_MODAL);
 		profileManagementStage.setTitle("Profile Manager");
+		profileManagementStage.setResizable(false);
+
+		profileManagementStage.centerOnScreen();
 		profileManagementStage.setScene(scene);
 		profileManagementStage.show();
+		
+		
 	}
 
-	private void setTextFields() {
-		userNameTextField.setText(selectedProfile.getUserName());
-		serverAddressTextField.setText(selectedProfile.getServerAdress());
-		serverPasswordTextField.setText(selectedProfile.getServerPassword());
-		groupNameTextField.setText(selectedProfile.getGroupName());
+	public void setTextFields() {
+		userNameTextField.setText(loadedProfile.getUserName());
+		serverAddressTextField.setText(loadedProfile.getServerAdress());
+		serverPasswordTextField.setText(loadedProfile.getServerPassword());
+		groupNameTextField.setText(loadedProfile.getGroupName());
 	}
 
-	private void setBottomPane() {
+	public void setBottomPane() {
 		profileManagementStageBottomPane.getChildren().clear();
 
-		Collections.sort(selectedProfile.getUsedGameList());
-		Collections.sort(selectedProfile.getUnusedGameList());
+		Collections.sort(loadedProfile.getUsedGameList());
+		Collections.sort(loadedProfile.getUnusedGameList());
 		//selectedProfile.getUsedGameList()
 
 		int maxColoumCount = 4;
@@ -238,8 +247,8 @@ public class ProfileManagingWindowBase extends Observable {
 		int buttonWidth = 120;
 		int buttonHeight = 30;
 
-		for (int i = 0; i < selectedProfile.getUsedGameList().size(); i++) {
-			Button deleteButton = new Button(selectedProfile.getUsedGameList().get(i));
+		for (int i = 0; i < loadedProfile.getUsedGameList().size(); i++) {
+			Button deleteButton = new Button(loadedProfile.getUsedGameList().get(i));
 			deleteButton.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent arg0) {
@@ -251,10 +260,10 @@ public class ProfileManagingWindowBase extends Observable {
 
 					String toBeRemoved = button.getText();
 
-					for (String s : selectedProfile.getUsedGameList())
+					for (String s : loadedProfile.getUsedGameList())
 						if (s.equals(toBeRemoved)) {
-							selectedProfile.getUsedGameList().remove(s);
-							selectedProfile.getUnusedGameList().add(s);
+							loadedProfile.getUsedGameList().remove(s);
+							loadedProfile.getUnusedGameList().add(s);
 							break;
 						}
 
@@ -262,6 +271,7 @@ public class ProfileManagingWindowBase extends Observable {
 					profileManagementStage.sizeToScene();
 				}
 			});
+			
 			deleteButton.setMaxWidth(buttonWidth);
 			deleteButton.setMinWidth(buttonWidth);
 			deleteButton.setMaxHeight(buttonHeight);
@@ -281,8 +291,8 @@ public class ProfileManagingWindowBase extends Observable {
 		currentRow++;
 		currentColoum = 0;
 
-		for (int i = 0; i < selectedProfile.getUnusedGameList().size(); i++) {
-			Button deleteButton = new Button(selectedProfile.getUnusedGameList().get(i));
+		for (int i = 0; i < loadedProfile.getUnusedGameList().size(); i++) {
+			Button deleteButton = new Button(loadedProfile.getUnusedGameList().get(i));
 			deleteButton.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent arg0) {
@@ -294,10 +304,10 @@ public class ProfileManagingWindowBase extends Observable {
 
 					String toBeRemoved = button.getText();
 
-					for (String s : selectedProfile.getUnusedGameList())
+					for (String s : loadedProfile.getUnusedGameList())
 						if (s.equals(toBeRemoved)) {
-							selectedProfile.getUnusedGameList().remove(s);
-							selectedProfile.getUsedGameList().add(s);
+							loadedProfile.getUnusedGameList().remove(s);
+							loadedProfile.getUsedGameList().add(s);
 							break;
 						}
 
@@ -306,6 +316,7 @@ public class ProfileManagingWindowBase extends Observable {
 					profileManagementStage.sizeToScene();
 				}
 			});
+			
 			deleteButton.setMaxWidth(buttonWidth);
 			deleteButton.setMinWidth(buttonWidth);
 			deleteButton.setMaxHeight(buttonHeight);
@@ -322,16 +333,19 @@ public class ProfileManagingWindowBase extends Observable {
 			if (currentColoum == 0)
 				currentRow++;
 		}
+		
 		profileManagementStage.sizeToScene();
 	}
 
-	private void updateComboBoxContent() {
+	/*
+	 * //TODO Verschiebungdieser Funktionalitätin den Controller
+	 */
+	public void updateComboBoxContent() {
 		File folder = new File(Misc.PROFILEPATH);
 		File[] listOfProfileFiles = folder.listFiles();
 		listOfProfiles = new String[listOfProfileFiles.length];
 		for (int index = 0; index < listOfProfileFiles.length; index++) {
 			if (listOfProfileFiles[index].isFile()) {
-				//System.out.println("File " + listOfProfileFiles[i].getName());
 				listOfProfiles[index] = listOfProfileFiles[index].getName();
 			} else if (listOfProfileFiles[index].isDirectory()) {
 				listOfProfiles[index] = null;
@@ -346,6 +360,9 @@ public class ProfileManagingWindowBase extends Observable {
 	}
 	
 	/* ---------- EventHandle-Setter ---------- */
+	public void setProfileComboBoxAction(EventHandler<ActionEvent> eventHandler) {
+		this.selectedProfileComboBox.setOnAction(eventHandler);
+	}
 	
 	public void setSaveBtn(EventHandler<ActionEvent> eventHandler) {
 		this.saveBtn.setOnAction(eventHandler);
@@ -365,5 +382,36 @@ public class ProfileManagingWindowBase extends Observable {
 	
 	public void setSelectedProfileComboBoxAction(EventHandler<ActionEvent> eventHandler) {
 		this.selectedProfileComboBox.setOnAction(eventHandler);
-	}	
+	}
+	
+	/* ----- GET & SET ----- */
+	public LoadedProfile getLoadedProfile() {
+		return this.loadedProfile;
+	}
+	
+	public String getComboBoxContent() {
+		return this.selectedProfileComboBox.getEditor().getText();
+	}
+	
+	public String getUserNameTextFieldConten() {
+		return this.userNameTextField.getText();
+	}
+	
+	public String getServerAddressTextFieldContent() {
+		return this.serverAddressTextField.getText();
+	}
+	
+	public String getGroupNameTextFieldContent() {
+		return this.groupNameTextField.getText();
+	}
+	
+	public String getServerPasswordTextFieldContent() {
+		return this.serverPasswordTextField.getText();
+	}
+	
+	public void setLoadedProfile(LoadedProfile loadedProfile) {
+		this.loadedProfile = loadedProfile;
+	}
+	
+
 }

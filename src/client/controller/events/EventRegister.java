@@ -7,6 +7,7 @@ import client.controller.events.profilemanagement.RefreshBtnEvent;
 import client.controller.events.profilemanagement.SaveBtnEvent;
 import client.view.ClientView;
 import client.view.mainwindow.MainWindowTopPane;
+import client.view.profilemanagingwindow.ProfileManagingWindowBase;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
@@ -18,7 +19,7 @@ public class EventRegister {
 	
 	/* ----- ProfileManagingWindow ----- */
 	private EventHandler<ActionEvent> newGameBtnEvent;
-	private EventHandler<ActionEvent> refreshBtnEvent;
+//	private EventHandler<ActionEvent> refreshBtnEvent;
 	private EventHandler<ActionEvent> saveBtnEvent;
 	private EventHandler<ActionEvent> applyProfileBtnEvent;
 	
@@ -35,7 +36,7 @@ public class EventRegister {
 		
 		/* ----- ProfileManagingWindow ----- */
 		newGameBtnEvent = new NewGameBtnEvent(this.clientView);
-		refreshBtnEvent = new RefreshBtnEvent();
+//		refreshBtnEvent = new RefreshBtnEvent();
 		saveBtnEvent = new SaveBtnEvent();
 		applyProfileBtnEvent = new ApplyProfileButtonEvent();
 	}
@@ -46,6 +47,10 @@ public class EventRegister {
 	}
 	
 	public void registerProfileManagementWindowEvents() {
-
+		ProfileManagingWindowBase profileManagingWindowBase = clientView.getProfileManagingWindowBase();
+		profileManagingWindowBase.setNewGameBtnAction(newGameBtnEvent);
+		//refresh button event? should not be bound to a button i suppose
+		profileManagingWindowBase.setSaveBtn(saveBtnEvent);
+		profileManagingWindowBase.setApplyProfileBtn(applyProfileBtnEvent);
 	}
 }

@@ -150,7 +150,8 @@ public class LoadedProfile implements Serializable{
 		}
 	}
 	
-	public void saveToFile(String toBeSaved) {
+	public void saveToFile() {
+		String toBeSaved = this.toString();
 		final String FILENAME = Misc.PROFILEPATH + profilName;
 		FileWriter write;
 		try {
