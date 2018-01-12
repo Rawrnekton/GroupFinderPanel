@@ -15,7 +15,7 @@ public class ClientView{
 	private MainWindowBase mainWindowBase;
 	private ProfileManagingWindowBase profileManagingWindowBase;
 	private Stage primaryStage;
-	private Observer observer;
+	private Observer observer; //test commit
 	
 	
 	public ClientView(Stage primaryStage, Observer observer) {
