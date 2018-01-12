@@ -1,24 +1,20 @@
 package client.view.mainwindow;
 
-import java.util.Observer;
-
-import client.view.profilemanagingwindow.ProfileManagingWindowBase;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 
 public class MainWindowTopPane extends HBox {
 
-	private Stage primaryStage;
+//	private Stage primaryStage;
 	
 	private Button refreshBtn;
 	private Button manageProfileBtn;
 
-	public MainWindowTopPane(Stage primaryStage, Observer observer) {
-		this.primaryStage = primaryStage;
+	public MainWindowTopPane() { //Stage primaryStage, Observer observer) {
+//		this.primaryStage = primaryStage;
 		
 		refreshBtn = new Button();
 		refreshBtn.setText("Refresh");

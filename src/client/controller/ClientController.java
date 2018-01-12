@@ -7,7 +7,6 @@ import client.controller.events.EventRegister;
 import client.model.ClientModel;
 import client.view.ClientView;
 import lib.Debug;
-import lib.Misc;
 
 public class ClientController implements Observer{
 	

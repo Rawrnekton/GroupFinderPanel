@@ -1,14 +1,11 @@
 package client.model;
 
-import java.util.concurrent.FutureTask;
-
 import client.view.profilemanagingwindow.LoadedProfile;
 
 public class ClientModel {
 
 	private Object clientMessage;
-	private LoadedProfile loadedProfile;
-	
+	private LoadedProfile loadedProfile;	
 	
 //	public static void main(String args[]) {
 //		

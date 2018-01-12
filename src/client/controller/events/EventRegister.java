@@ -3,7 +3,6 @@ package client.controller.events;
 import client.controller.events.mainwindow.ManageProfileBtnEvent;
 import client.controller.events.profilemanagement.ApplyProfileButtonEvent;
 import client.controller.events.profilemanagement.NewGameBtnEvent;
-import client.controller.events.profilemanagement.RefreshBtnEvent;
 import client.controller.events.profilemanagement.SaveBtnEvent;
 import client.view.ClientView;
 import client.view.mainwindow.MainWindowTopPane;
@@ -32,7 +31,7 @@ public class EventRegister {
 //		Debug.debug(this, "Creating the events.");
 		
 		/* ----- MainWindow ----- */	
-		manageProfileBtnEvent = new ManageProfileBtnEvent(clientView.getPrimaryStage());
+		manageProfileBtnEvent = new ManageProfileBtnEvent(clientView);
 		
 		/* ----- ProfileManagingWindow ----- */
 		newGameBtnEvent = new NewGameBtnEvent(this.clientView);
