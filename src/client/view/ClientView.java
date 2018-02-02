@@ -10,13 +10,12 @@ import javafx.stage.Stage;
  * Sets up View for application and manages the displayed content
  * that is supplied by the controller
  */
-public class ClientView{
+public class ClientView {
 
 	private MainWindowBase mainWindowBase;
 	private ProfileManagingWindowBase profileManagingWindowBase;
 	private Stage primaryStage;
-	private Observer observer; //test commit
-	
+	private Observer observer;
 	
 	public ClientView(Stage primaryStage, Observer observer) {
 		this.primaryStage = primaryStage;
@@ -24,11 +23,11 @@ public class ClientView{
 		this.mainWindowBase = new MainWindowBase(this.primaryStage, this.observer);
 		this.profileManagingWindowBase = null;
 	}
-	
+
 	public Stage getPrimaryStage() {
 		return primaryStage;
 	}
-	
+
 	public MainWindowBase getMainWindowBase() {
 		return mainWindowBase;
 	}
@@ -40,5 +39,5 @@ public class ClientView{
 	public void setProfileManagingWindowBase(ProfileManagingWindowBase profileManagingWindowBase) {
 		this.profileManagingWindowBase = profileManagingWindowBase;
 	}
-	
+
 }

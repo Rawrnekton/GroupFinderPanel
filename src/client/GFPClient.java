@@ -37,7 +37,6 @@ public class GFPClient extends Application implements Observer{
 	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		
 		ClientView clientView = new ClientView(primaryStage, this);
 		String preLoadedProfile = Misc.LASTLOADEDPROFILE;
 		ClientModel clientModel = new ClientModel(preLoadedProfile);

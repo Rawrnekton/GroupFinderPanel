@@ -16,12 +16,10 @@ public class MainWindowBase {
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("GroupFinderPanel");
 	
-		mainWindowPane = new BorderPane();
-		
 		mainWindowTopPane = new MainWindowTopPane(); //this.primaryStage, observer);
 		mainWindowPane.setTop(mainWindowTopPane);
 
-		Scene scene = new Scene(mainWindowPane, 300, 250);
+		Scene scene = new Scene(mainWindowTopPane, 300, 250);
 		this.primaryStage.setScene(scene);
 		this.primaryStage.show();
 	}
