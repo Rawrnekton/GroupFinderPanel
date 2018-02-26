@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
-import java.util.Observable;
-import java.util.Observer;
 
 import client.view.profilemanagingwindow.LoadedProfile;
 
@@ -18,7 +16,7 @@ import client.view.profilemanagingwindow.LoadedProfile;
 public class GFPServer {
 	public static void main(String[] args) throws Exception {
 
-		//final ExecutorService pool = Executors.newCachedThreadPool();
+		// final ExecutorService pool = Executors.newCachedThreadPool();
 		ServerSocket serverSocket = null;
 		int port = 2709;
 
@@ -43,22 +41,22 @@ public class GFPServer {
 	}
 }
 
-class NetworkService implements Runnable, Observer {
+class NetworkService implements Runnable {
 
 	private final ServerSocket serverSocket;
-	//private final ExecutorService pool;
+	// private final ExecutorService pool;
 	private final boolean PIGS_DONT_FLY = true;
 	private LinkedList<Handler> allServerToClientHandler;
 	private LinkedList<LoadedProfile> clientProfiles;
-	//private LinkedList<Integer> toBeRemovedClients;
+	// private LinkedList<Integer> toBeRemovedClients;
 
-	//	public StoredData storedData;
+	// public StoredData storedData;
 
 	public NetworkService(ServerSocket serverSocket) {
 		this.serverSocket = serverSocket;
 		this.allServerToClientHandler = new LinkedList<Handler>();
 		this.clientProfiles = new LinkedList<LoadedProfile>();
-		//		this.storedData = new StoredData();
+		// this.storedData = new StoredData();
 	}
 
 	public void run() {
@@ -68,14 +66,13 @@ class NetworkService implements Runnable, Observer {
 				 * Wait for new Clients
 				 */
 				Socket cs = serverSocket.accept();
-				lib.Debug.debug(this, "new socket established", false);
+				lib.Debug.debug(this, "New socket established.", false);
 				/*
-				 * Create ClientHandler and Save them in the LinkedList for
-				 * Future Refernce (mostly to send them the
-				 * ServerToClientMessage)
+				 * Create ClientHandler and Save them in the LinkedList for Future Refernce
+				 * (mostly to send them the ServerToClientMessage)
 				 */
 				Handler clientHandler = new Handler(cs, this);
-				//allServerToClientHandler.add(clientHandler);
+				// allServerToClientHandler.add(clientHandler);
 
 				/*
 				 * Create and start a Thread for the ClientHandler
@@ -95,22 +92,22 @@ class NetworkService implements Runnable, Observer {
 	 * 
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
-	@Override
-	public void update(Observable o, Object arg) {
+//	@Override
+	public void updateClientData(Object callingObject, LoadedProfile loadedProfile) {
 
-		LoadedProfile newProfile;
+		LoadedProfile newProfile = loadedProfile;
+
 		/*
-		 * arg == null ist UNTESTED
-		 * so is the else
+		 * If the clients sends no profile all clients are updated with the old data
+		 * TODO remove unnecessary updates, don't know yet if they are required though
 		 */
-		if (arg instanceof LoadedProfile || arg == null) {
-			newProfile = (LoadedProfile) arg;
-		} else {
-			//tell the upstreams that they should update
+		if (loadedProfile == null) {
+			
 			int serverToClientHandlerCount = allServerToClientHandler.size();
 			for (int index = 0; index < serverToClientHandlerCount; index++) {
 				allServerToClientHandler.get(index).setNewProfilesAvailable(true);
 			}
+			
 			return;
 		}
 
@@ -123,7 +120,8 @@ class NetworkService implements Runnable, Observer {
 		int loadedProfilesCount = clientProfiles.size();
 		for (int index = 0; index < loadedProfilesCount; index++) {
 			if (clientProfiles.get(index).getClientID() == newProfile.getClientID()) {
-				lib.Debug.debug(this, "trying to delete profile with ID " + newProfile.getClientID() + " at index " + index, true);
+				lib.Debug.debug(this,
+						"trying to delete profile with ID " + newProfile.getClientID() + " at index " + index, true);
 				try {
 					clientProfiles.remove(index);
 				} catch (IndexOutOfBoundsException e) {
@@ -131,31 +129,32 @@ class NetworkService implements Runnable, Observer {
 				}
 			}
 		}
-		
+
 		clientProfiles.add(newProfile);
 		lib.Debug.debug(this, "clientProfiles = " + clientProfiles.size());
 		lib.Debug.debug(this, getProfileOverview(), true);
 		/**
-		 * Senden der aktuellen Profilliste, bzw notifizieren dass eine neue
-		 * Profilliste da ist
+		 * Senden der aktuellen Profilliste, bzw notifizieren dass eine neue Profilliste
+		 * da ist
 		 */
 		int serverToClientHandlerCount = allServerToClientHandler.size();
 		lib.Debug.debug(this, "serverToClientHandlerCount = " + serverToClientHandlerCount, false);
-		
-		//tell the upstreams that they should update
+
+		// tell the upstreams that they should update
 		for (int index = 0; index < serverToClientHandlerCount; index++) {
 			allServerToClientHandler.get(index).setNewProfilesAvailable(true);
 		}
 	}
-	
+
 	public String getProfileOverview() {
 		String returnString = "-- profile overview --\n";
 		int clientProfilesCount = clientProfiles.size();
-		
+
 		for (int index = 0; index < clientProfilesCount; index++) {
-			returnString += clientProfiles.get(index).getClientID() + "	| " + clientProfiles.get(index).getProfileName() + "	|\n";
+			returnString += clientProfiles.get(index).getClientID() + "	| " + clientProfiles.get(index).getProfileName()
+					+ "	|\n";
 		}
-		
+
 		return returnString;
 	}
 
@@ -172,8 +171,7 @@ class NetworkService implements Runnable, Observer {
 	 * allServerToClientHandler.size(); for(int index = 0; index <
 	 * clientHandlerSize; index++) { if
 	 * (allServerToClientHandler.get(index).getClientID() ==
-	 * toBeRemoved.getClientID()) { allServerToClientHandler.remove(index); } }
-	 * }
+	 * toBeRemoved.getClientID()) { allServerToClientHandler.remove(index); } } }
 	 */
 }
 

@@ -23,8 +23,6 @@ public class Handler extends Observable implements Runnable {
 	private ObjectOutputStream outToClientStream;
 
 	private LoadedProfile loadedProfile;
-	//	private StoredData storedData;
-	//	private ServerToClientMessage serverToClientMessage;
 
 	/**
 	 * Debug Value, that is used to communicate the current State to the Console
@@ -46,7 +44,6 @@ public class Handler extends Observable implements Runnable {
 	Handler(Socket client, NetworkService networkServiceThread) {
 		this.client = client;
 		this.networkServiceThread = networkServiceThread;
-		addObserver(networkServiceThread);
 
 		try {
 			inFromClientStream = new ObjectInputStream(this.client.getInputStream());
@@ -107,12 +104,13 @@ public class Handler extends Observable implements Runnable {
 
 			/*
 			 * Check ob die ID überhaupt einen Downstream hat
+			 * TODO checkForDownstream(...) always returns true
 			 */
 			if (checkForDownstream(loadedProfile.getClientID())) {
-
-				lib.Debug.debug(this, "new profile detected", true);
-				setChanged();
-				notifyObservers(loadedProfile);
+				lib.Debug.debug(this, "New profile detected.", true);
+				lib.Debug.debug(this, "Running client updates", true);
+				
+				this.networkServiceThread.updateClientData(this, this.loadedProfile);
 			}
 
 			//evtl affirmation schicken, if all good
