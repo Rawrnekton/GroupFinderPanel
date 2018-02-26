@@ -10,9 +10,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import client.view.profilemanagingwindow.LoadedProfile;
 
 /**
- * Muss besser in down und upstream geteilt werden
  * 
- * @author jonathan
+ * @author jg
  *
  */
 public class Handler extends Observable implements Runnable {
@@ -129,18 +128,16 @@ public class Handler extends Observable implements Runnable {
 
 	/**
 	 * Server to Client Stream
+	 * Sends all of the gathered Profiles to the Client
 	 */
 	private void serverToClientStream() {
-		//immer wenn der observer den handler anschubst
-		//also den entsprechenden bool wert auf true setzt
-
+		
 		try {
 			/*
 			 * optimize this to make removing things easier
 			 * server starts at 0 and then preincrements the ID everytime a new
 			 * Client connects
-			 * does not reuse id's yet and i believe it will stay that way because
-			 * there is no functionality lost
+			 * does not reuse id's yet and i believe it will stay that way
 			 */
 			clientID = ++nextClientID;
 			outToClientStream.writeObject(clientID);
@@ -150,6 +147,9 @@ public class Handler extends Observable implements Runnable {
 
 			while (true) {
 				try {
+					/*
+					 * 
+					 */
 					Thread.sleep(delayInMS);
 					if (newProfilesAvailable) {
 						newProfilesAvailable = false;
@@ -189,7 +189,7 @@ public class Handler extends Observable implements Runnable {
 	 * @param clientID
 	 */
 	private void deleteProfilOf(int clientID) {
-		//TODO Write some basic functionality to test and make it robust, i dont want the server to freak out every time something goes wrong
+		
 		int handlerAmount = networkServiceThread.getAllServerToClientHandler().size();
 		lib.Debug.debug(this, "handlerAmount = " + handlerAmount);
 		lib.Debug.debug(this, "to be deleted ID = " + clientID, true);

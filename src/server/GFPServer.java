@@ -1,6 +1,6 @@
 package server;
-/*
- * genutzte java version: 1.8.0_65
+/**
+ * @author jg
  */
 
 import java.io.IOException;
@@ -12,9 +12,6 @@ import java.util.Observer;
 
 import client.view.profilemanagingwindow.LoadedProfile;
 
-/*
- * Klasse zum starten des Wetter-Server der sich um die Clients kümmert
- */
 public class GFPServer {
 	public static void main(String[] args) throws Exception {
 
@@ -33,7 +30,7 @@ public class GFPServer {
 		/*
 		 * Thread clientUpdateService = new Thread(new
 		 * ClientUpdateService(serverSocket)); System.out.
-		 * println("Network service succesfully started, can now receive and process requests."
+		 * println("Network service successfully started, can now receive and process requests."
 		 * ); clientUpdateService.start();
 		 */
 
@@ -89,19 +86,18 @@ class NetworkService implements Runnable, Observer {
 		}
 	}
 
-	/*
-	 * gets called whenever an upstream Client sends a profile (a check if the
-	 * profile is new does not happen) (non-Javadoc)
+
+	/**
+	 * Function that organizes the profiles of connected clients
+	 * Adds them together
 	 * 
-	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	@Override
 	public void update(Observable o, Object arg) {
 
 		LoadedProfile newProfile;
 		/*
-		 * arg == null ist UNTESTED
-		 * so is the else
+		 * arg is the transmitted _new_ (or already existing) profile
 		 */
 		if (arg instanceof LoadedProfile || arg == null) {
 			newProfile = (LoadedProfile) arg;
@@ -135,14 +131,17 @@ class NetworkService implements Runnable, Observer {
 		clientProfiles.add(newProfile);
 		lib.Debug.debug(this, "clientProfiles = " + clientProfiles.size());
 		lib.Debug.debug(this, getProfileOverview(), true);
-		/**
+		
+		/*
 		 * Senden der aktuellen Profilliste, bzw notifizieren dass eine neue
 		 * Profilliste da ist
 		 */
 		int serverToClientHandlerCount = allServerToClientHandler.size();
 		lib.Debug.debug(this, "serverToClientHandlerCount = " + serverToClientHandlerCount, false);
 		
-		//tell the upstreams that they should update
+		/*
+		 * tell the server to client streams that they should update
+		 */
 		for (int index = 0; index < serverToClientHandlerCount; index++) {
 			allServerToClientHandler.get(index).setNewProfilesAvailable(true);
 		}
