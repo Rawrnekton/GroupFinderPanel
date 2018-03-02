@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Observable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import client.view.profilemanagingwindow.LoadedProfile;
@@ -14,7 +13,7 @@ import client.view.profilemanagingwindow.LoadedProfile;
  * @author jg
  *
  */
-public class Handler extends Observable implements Runnable {
+public class Handler implements Runnable {
 	private final Socket client;
 	private final NetworkService networkServiceThread;
 
@@ -62,7 +61,7 @@ public class Handler extends Observable implements Runnable {
 	public void run() {
 		//check if upstream or downstream
 
-		statusMessage = "Clienthandler started.";
+//		statusMessage = "Clienthandler started.";
 //		System.out.println(statusMessage);
 
 		try {
@@ -103,7 +102,7 @@ public class Handler extends Observable implements Runnable {
 
 			/*
 			 * Check ob die ID überhaupt einen Downstream hat
-			 * TODO checkForDownstream(...) always returns true
+			 * TODO checkForDownstream(...) always returns true at the moment
 			 */
 			if (checkForDownstream(loadedProfile.getClientID())) {
 				lib.Debug.debug(this, "New profile detected.", true);
@@ -145,9 +144,6 @@ public class Handler extends Observable implements Runnable {
 
 			while (true) {
 				try {
-					/*
-					 * 
-					 */
 					Thread.sleep(delayInMS);
 					if (newProfilesAvailable) {
 						newProfilesAvailable = false;
@@ -177,8 +173,7 @@ public class Handler extends Observable implements Runnable {
 		 */
 		deleteProfilOf(clientID);
 
-		setChanged();
-		notifyObservers();
+		networkServiceThread.updateClientData(this, null);
 	}
 
 	/**

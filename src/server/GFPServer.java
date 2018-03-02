@@ -7,8 +7,11 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import client.view.profilemanagingwindow.LoadedProfile;
+import lib.Config;
 
 public class GFPServer {
 	public static void main(String[] args) throws Exception {
@@ -41,13 +44,12 @@ public class GFPServer {
 class NetworkService implements Runnable {
 
 	private final ServerSocket serverSocket;
-	// private final ExecutorService pool;
 	private final boolean PIGS_DONT_FLY = true;
+	
+//	private ExecutorService test = Executors.newCachedThreadPool();
+	
 	private LinkedList<Handler> allServerToClientHandler;
 	private LinkedList<LoadedProfile> clientProfiles;
-	// private LinkedList<Integer> toBeRemovedClients;
-
-	// public StoredData storedData;
 
 	public NetworkService(ServerSocket serverSocket) {
 		this.serverSocket = serverSocket;
@@ -65,15 +67,15 @@ class NetworkService implements Runnable {
 				Socket cs = serverSocket.accept();
 				lib.Debug.debug(this, "New socket established.", false);
 				/*
-				 * Create ClientHandler and Save them in the LinkedList for Future Refernce
+				 * Create ClientHandler and Save them in the LinkedList for Future Reference
 				 * (mostly to send them the ServerToClientMessage)
 				 */
 				Handler clientHandler = new Handler(cs, this);
-				// allServerToClientHandler.add(clientHandler);
+				// allServerToClientHandler.add(clientHandler); // questionable, removed for now
 
 				/*
 				 * Create and start a Thread for the ClientHandler
-				 */
+				 */				
 				Thread clientHandlerThread = new Thread(clientHandler, "clientHandler");
 				clientHandlerThread.start();
 
@@ -95,8 +97,10 @@ class NetworkService implements Runnable {
 		LoadedProfile newProfile = loadedProfile;
 
 		/*
-		 * If the clients sends no profile all clients are updated with the old data
-		 * TODO remove unnecessary updates, don't know yet if they are required though
+		 * updateClientData gets called with (this, null) only when the server to client broke and the
+		 * profile of the broken client got deleted
+		 * 
+		 * thats why all clients get updated, even though no "new" information is present
 		 */
 		if (loadedProfile == null) {
 			
@@ -122,7 +126,7 @@ class NetworkService implements Runnable {
 				try {
 					clientProfiles.remove(index);
 				} catch (IndexOutOfBoundsException e) {
-					lib.Debug.debug(this, "yeah whatever", false);
+					debug(this, "yeah whatever", false);
 				}
 			}
 		}
