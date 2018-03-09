@@ -7,11 +7,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import client.view.profilemanagingwindow.LoadedProfile;
-import lib.Config;
 
 public class GFPServer {
 	public static void main(String[] args) throws Exception {
@@ -92,10 +89,12 @@ class NetworkService implements Runnable {
 	 * 
 	 */
 //	@Override
-	public void updateClientData(Object callingObject, LoadedProfile loadedProfile) {
+	public void updateClientData(LoadedProfile loadedProfile) {
 
 		LoadedProfile newProfile = loadedProfile;
 
+		
+		
 		/*
 		 * updateClientData gets called with (this, null) only when the server to client broke and the
 		 * profile of the broken client got deleted
@@ -126,7 +125,7 @@ class NetworkService implements Runnable {
 				try {
 					clientProfiles.remove(index);
 				} catch (IndexOutOfBoundsException e) {
-					debug(this, "yeah whatever", false);
+					lib.Debug.debug(this, "yeah whatever", false);
 				}
 			}
 		}

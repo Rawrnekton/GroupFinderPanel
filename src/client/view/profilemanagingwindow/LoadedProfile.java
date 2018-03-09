@@ -17,7 +17,7 @@ import lib.Misc;
 public class LoadedProfile implements Serializable{
 
 	private static final long serialVersionUID = 4061867404946651656L;
-	private String profilName;
+	private String profileName;
 	private String userName;
 	private int clientID;
 	
@@ -31,14 +31,14 @@ public class LoadedProfile implements Serializable{
 	private Date dateOfCreation;
 	
 	public LoadedProfile(String usedProfil) {
-		this.profilName = usedProfil;
+		this.profileName = usedProfil;
 		loadProfile(usedProfil);
 		this.clientID = 0;
 		this.dateOfCreation = new Date();
 	}
 		
 	public void setProfilName(String profilName) {
-		this.profilName = profilName;
+		this.profileName = profilName;
 	}
 	public void setUserName(String userName) {
 		this.userName = userName;
@@ -67,7 +67,7 @@ public class LoadedProfile implements Serializable{
 	}
 	
 	public String getProfileName() {
-		return profilName;
+		return profileName;
 	}
 	public String getUserName() {
 		return userName;
@@ -113,7 +113,7 @@ public class LoadedProfile implements Serializable{
 			String sCurrentLine;
 			br = new BufferedReader(new FileReader(FILENAME));
 
-			profilName = br.readLine();
+			profileName = br.readLine();
 			userName = br.readLine();
 			serverAddress = br.readLine();
 			groupName = br.readLine();
@@ -152,7 +152,7 @@ public class LoadedProfile implements Serializable{
 	
 	public void saveToFile() {
 		String toBeSaved = this.toString();
-		final String FILENAME = Misc.PROFILEPATH + profilName;
+		final String FILENAME = Misc.PROFILEPATH + profileName;
 		FileWriter write;
 		try {
 			write = new FileWriter(FILENAME, false);
@@ -173,7 +173,7 @@ public class LoadedProfile implements Serializable{
 	public String toString() {
 		String re = "";
 		
-		re += profilName + "\n";
+		re += profileName + "\n";
 		re += userName + "\n";
 		re += serverAddress + "\n";
 		re += groupName + "\n";
@@ -195,5 +195,14 @@ public class LoadedProfile implements Serializable{
 		re = re.substring(0, re.length() - 1);
 		
 		return re;
+	}
+	
+	public boolean equals(LoadedProfile newProfile) {
+		if(!profileName.equals(newProfile.getProfileName())) {
+			return false;
+		}
+		
+		
+		return true;
 	}
 }

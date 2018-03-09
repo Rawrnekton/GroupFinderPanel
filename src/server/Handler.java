@@ -32,10 +32,9 @@ public class Handler implements Runnable {
 	private int clientID;
 
 	private int delayInMS = 10;
+
 	/*
-	 * Either Upstream or Downstream Um es zu vereinfachen: der server ist oben
-	 * upstream hier: data vom client zum server downstream hier: data vom
-	 * server zum client
+	 * debug string to get the used client type
 	 */
 	private String clientType;
 
@@ -59,14 +58,15 @@ public class Handler implements Runnable {
 	 * client.isClosed()
 	 */
 	public void run() {
-		//check if upstream or downstream
+		// check if upstream or downstream
 
-//		statusMessage = "Clienthandler started.";
-//		System.out.println(statusMessage);
+		// statusMessage = "Clienthandler started.";
+		// System.out.println(statusMessage);
 
 		try {
 			lib.Debug.debug("reading clientID");
-			clientID = (int) inFromClientStream.readObject();
+			// clientID = (int) inFromClientStream.readObject();
+			clientID = inFromClientStream.readInt();
 
 			lib.Debug.debug("received ID = " + clientID);
 			/*
@@ -81,37 +81,54 @@ public class Handler implements Runnable {
 				serverToClientStream();
 			} else {
 				clientType = "clienToServerStream";
-				clientToServerStream();
+				
+				// save offered ID in the downstream to prevent meddling with the id
+				clientToServerStream(clientID);
 			}
-		} catch (ClassNotFoundException | IOException e1) {
+		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
 	}
 
 	/**
 	 * Client To Server Stream
+	 * 
+	 * @param clientID failsafe to prevent client from transmitting two different IDs
 	 */
-	private void clientToServerStream() {
+	private void clientToServerStream(int clientID) {
 		/*
 		 * Client teilt Server Profile mit Sever wartet danach auf ein erneutes
 		 * schreiben auf den Socket
 		 */
 		try {
-			//New Value gets collected by the Observer
-			loadedProfile = (LoadedProfile) inFromClientStream.readObject();
+			// New Value gets collected by the Observer
+			LoadedProfile newProfile = (LoadedProfile) inFromClientStream.readObject();
 
 			/*
-			 * Check ob die ID überhaupt einen Downstream hat
-			 * TODO checkForDownstream(...) always returns true at the moment
+			 * failsafe to prevent client from transmitting two different IDs
+			 */
+			newProfile.setClientID(clientID);
+
+			
+			/*
+			 * if the new Profile isn't equal to the old one
+			 * thee old order shall be no more
+			 */
+			if (!loadedProfile.equals(newProfile)) {
+				loadedProfile = newProfile;
+			}
+			/*
+			 * Check ob die ID überhaupt einen Downstream hat TODO
+			 * checkForDownstream(...) always returns true at the moment
 			 */
 			if (checkForDownstream(loadedProfile.getClientID())) {
 				lib.Debug.debug(this, "New profile detected.", true);
-				lib.Debug.debug(this, "Running client updates", true);
-				
-				this.networkServiceThread.updateClientData(this, this.loadedProfile);
+				lib.Debug.debug(this, "Running updating all clients", true);
+
+				this.networkServiceThread.updateClientData(this.loadedProfile);
 			}
 
-			//evtl affirmation schicken, if all good
+			lib.Debug.debug(this, "Updates were succesful", true);
 		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}
@@ -124,22 +141,20 @@ public class Handler implements Runnable {
 	}
 
 	/**
-	 * Server to Client Stream
-	 * Sends all of the gathered Profiles to the Client
+	 * Server to Client Stream Sends all of the gathered Profiles to the Client
 	 */
 	private void serverToClientStream() {
-		
+
 		try {
 			/*
-			 * optimize this to make removing things easier
-			 * server starts at 0 and then preincrements the ID everytime a new
-			 * Client connects
+			 * optimize this to make removing things easier server starts at 0
+			 * and then preincrements the ID everytime a new Client connects
 			 * does not reuse id's yet and i believe it will stay that way
 			 */
 			clientID = ++nextClientID;
 			outToClientStream.writeObject(clientID);
 			lib.Debug.debug(this, "new clientID = " + clientID, true);
-			
+
 			networkServiceThread.getAllServerToClientHandler().add(this);
 
 			while (true) {
@@ -148,12 +163,14 @@ public class Handler implements Runnable {
 					if (newProfilesAvailable) {
 						newProfilesAvailable = false;
 						outToClientStream.reset();
-//						serverToClientMessage.setLoadedProfileList(networkServiceThread.getClientProfiles()); //storedData.getLoadedProfileList());
-						lib.Debug.debug(this, "sending " + networkServiceThread.getClientProfiles().size() + " Profiles to ID " + clientID, true);
+						// serverToClientMessage.setLoadedProfileList(networkServiceThread.getClientProfiles());
+						// //storedData.getLoadedProfileList());
+						lib.Debug.debug(this, "sending " + networkServiceThread.getClientProfiles().size()
+								+ " Profiles to ID " + clientID, true);
 						ServerToClientMessage msg = new ServerToClientMessage();
 						msg.setClientID(clientID);
 						msg.setLoadedProfileList(networkServiceThread.getClientProfiles());
-//						outToClientStream.writeObject(networkServiceThread.getClientProfiles());
+						// outToClientStream.writeObject(networkServiceThread.getClientProfiles());
 						outToClientStream.writeObject(msg);
 					}
 				} catch (InterruptedException e) {
@@ -168,12 +185,12 @@ public class Handler implements Runnable {
 
 		/**
 		 * Wenn Clientverbindung abbricht, oder geschlossen wird, wird noch das
-		 * gespeicherte Profil des Clients gelöscht
-		 * andere downstreams anstupsen, dass "neue" profile da
+		 * gespeicherte Profil des Clients gelöscht andere downstreams
+		 * anstupsen, dass "neue" profile da
 		 */
 		deleteProfilOf(clientID);
 
-		networkServiceThread.updateClientData(this, null);
+		networkServiceThread.updateClientData(null);
 	}
 
 	/**
@@ -182,7 +199,7 @@ public class Handler implements Runnable {
 	 * @param clientID
 	 */
 	private void deleteProfilOf(int clientID) {
-		
+
 		int handlerAmount = networkServiceThread.getAllServerToClientHandler().size();
 		lib.Debug.debug(this, "handlerAmount = " + handlerAmount);
 		lib.Debug.debug(this, "to be deleted ID = " + clientID, true);
@@ -191,7 +208,7 @@ public class Handler implements Runnable {
 				networkServiceThread.getAllServerToClientHandler().remove(index);
 			}
 		}
-		
+
 	}
 
 	/* ---------- GET-METHODS ---------- */
