@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;
 
+import lib.Debug;
 import lib.Misc;
 
 /*
@@ -119,6 +120,8 @@ public class LoadedProfile implements Serializable {
 
 		final String FILENAME = Misc.PROFILEPATH + usedProfil;
 
+		Debug.debug("Start loading Profile: " + usedProfil + ", at: " + FILENAME);
+		
 		BufferedReader br = null;
 		FileReader fr = null;
 
@@ -212,22 +215,24 @@ public class LoadedProfile implements Serializable {
 		return re;
 	}
 
+	/*
+	 * TODO
+	 * used to differentiate two profiles
+	 * returns true if they are identical
+	 */
 	public boolean equals(LoadedProfile otherProfile) {
-		if (!profileName.equals(otherProfile.getProfileName())) {
-			return false;
-		}
-		
-		if (!userName.equals(otherProfile.getUserName())) {
-			return false;
-		}
-
-		// TODO DONT MISS ME
-
+//		if (!profileName.equals(otherProfile.getProfileName())) {
+//			return false;
+//		}
+//		
+//		if (!userName.equals(otherProfile.getUserName())) {
+//			return false;
+//		}
 		/*
 		 * final version will return true if all other comparisons failed
 		 * -> they should be identical if true is returned
 		 */
-		// return true;
+//		return true;
 		return false;
 	}
 }

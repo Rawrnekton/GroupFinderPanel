@@ -12,7 +12,8 @@ public class ServerToClientStreamClient extends ProtoClient {
 	protected LinkedList<LoadedProfile> allLoadedProfiles;
 
 	public static void main(String args[]) {
-		ServerToClientStreamClient serverToClientStreamClient = new ServerToClientStreamClient("127.0.0.1", 2709, 0);
+		Debug.debug("Starte server to client StreamClient");
+		ServerToClientStreamClient serverToClientStreamClient = new ServerToClientStreamClient("127.0.0.1", 2709, 1);
 		Thread serverToClientStreamClientThread = new Thread(serverToClientStreamClient, "TestClientDownStream");
 		serverToClientStreamClientThread.start();
 

@@ -3,6 +3,7 @@ package client.model.streamclients;
 import java.io.IOException;
 
 import client.view.profilemanagingwindow.LoadedProfile;
+import lib.Debug;
 
 public class ClientToServerStreamClient extends ProtoClient{
 
@@ -14,11 +15,16 @@ public class ClientToServerStreamClient extends ProtoClient{
 	 * @param args not used
 	 */
 	public static void main(String args[]) {
+		Debug.debug("Starte client to server StreamClient");
+		
 		for(int index = 0; index < 1; index++) {
-			int clientID = 17 + index;
-			LoadedProfile test = new LoadedProfile("Profil 2");
+			int clientID = 2 + index;
+			LoadedProfile loadedProfile = new LoadedProfile("Profil 1");
 			
-			ClientToServerStreamClient clientToServerStreamClient = new ClientToServerStreamClient("127.0.0.1", 2709, clientID, test);
+			Debug.debug("LoadedProfile:");
+			Debug.debug(loadedProfile.toString());
+			
+			ClientToServerStreamClient clientToServerStreamClient = new ClientToServerStreamClient("127.0.0.1", 2709, clientID, loadedProfile);
 			Thread clientToServerStreamClientThread = new Thread(clientToServerStreamClient, "TestClientUpstream");
 			clientToServerStreamClientThread.start();
 		}

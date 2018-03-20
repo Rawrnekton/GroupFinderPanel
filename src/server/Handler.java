@@ -51,9 +51,9 @@ public class Handler implements Runnable {
 	}
 
 	/*
-	 * the protocol for transmission will be: while true: receive clients
-	 * profile send all profiles -> to get the new profiles, the client needs to
-	 * send his profile
+	 * the protocol for transmission will be: while true: receive clients profile
+	 * send all profiles -> to get the new profiles, the client needs to send his
+	 * profile
 	 * 
 	 * client.isClosed()
 	 */
@@ -70,8 +70,8 @@ public class Handler implements Runnable {
 
 			lib.Debug.debug("received ID = " + clientID);
 			/*
-			 * if ID is zero: this is the first thread that the client connected
-			 * with -> give him a real ID
+			 * if ID is zero: this is the first thread that the client connected with ->
+			 * give him a real ID
 			 *
 			 * setup here is slightly hacky tbh
 			 */
@@ -81,7 +81,7 @@ public class Handler implements Runnable {
 				serverToClientStream();
 			} else {
 				clientType = "clienToServerStream";
-				
+
 				// save offered ID in the downstream to prevent meddling with the id
 				clientToServerStream(clientID);
 			}
@@ -102,21 +102,13 @@ public class Handler implements Runnable {
 		 */
 		try {
 			// New Value gets collected by the Observer
-			LoadedProfile newProfile = (LoadedProfile) inFromClientStream.readObject();
+			loadedProfile = (LoadedProfile) inFromClientStream.readObject();
 
 			/*
 			 * failsafe to prevent client from transmitting two different IDs
 			 */
-			newProfile.setClientID(clientID);
+			loadedProfile.setClientID(clientID);
 
-			
-			/*
-			 * if the new Profile isn't equal to the old one
-			 * thee old order shall be no more
-			 */
-			if (!loadedProfile.equals(newProfile)) {
-				loadedProfile = newProfile;
-			}
 			/*
 			 * Check ob die ID überhaupt einen Downstream hat TODO
 			 * checkForDownstream(...) always returns true at the moment
@@ -147,12 +139,12 @@ public class Handler implements Runnable {
 
 		try {
 			/*
-			 * optimize this to make removing things easier server starts at 0
-			 * and then preincrements the ID everytime a new Client connects
-			 * does not reuse id's yet and i believe it will stay that way
+			 * optimize this to make removing things easier server starts at 0 and then
+			 * preincrements the ID everytime a new Client connects does not reuse id's yet
+			 * and i believe it will stay that way
 			 */
 			clientID = ++nextClientID;
-			outToClientStream.writeObject(clientID);
+			outToClientStream.writeInt(clientID);
 			lib.Debug.debug(this, "new clientID = " + clientID, true);
 
 			networkServiceThread.getAllServerToClientHandler().add(this);
@@ -175,7 +167,7 @@ public class Handler implements Runnable {
 					}
 				} catch (InterruptedException e) {
 					e.printStackTrace();
-					lib.Debug.debug(this, "Downstream mit ID " + clientID + " starb", false);
+					lib.Debug.debug(this, "Downstream mit ID " + clientID + " starb.", false);
 					break;
 				}
 			}
@@ -185,8 +177,8 @@ public class Handler implements Runnable {
 
 		/**
 		 * Wenn Clientverbindung abbricht, oder geschlossen wird, wird noch das
-		 * gespeicherte Profil des Clients gelöscht andere downstreams
-		 * anstupsen, dass "neue" profile da
+		 * gespeicherte Profil des Clients gelöscht andere downstreams anstupsen, dass
+		 * "neue" profile da
 		 */
 		deleteProfilOf(clientID);
 
