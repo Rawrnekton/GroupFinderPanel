@@ -13,7 +13,7 @@ public class ServerToClientStreamClient extends ProtoClient {
 
 	public static void main(String args[]) {
 		Debug.debug("Starte server to client StreamClient");
-		ServerToClientStreamClient serverToClientStreamClient = new ServerToClientStreamClient("127.0.0.1", 2709, 1);
+		ServerToClientStreamClient serverToClientStreamClient = new ServerToClientStreamClient("127.0.0.1", 2709, 0);
 		Thread serverToClientStreamClientThread = new Thread(serverToClientStreamClient, "TestClientDownStream");
 		serverToClientStreamClientThread.start();
 
@@ -47,6 +47,10 @@ public class ServerToClientStreamClient extends ProtoClient {
 
 	@Override
 	public void run() {
+		/*
+		 * default id as serverToClientStream is 0
+		 * -> new id will be assigned after connection is established
+		 */
 		schreibeNachricht(socket, 0);
 		clientID = (int) leseNachricht(socket);
 		

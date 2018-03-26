@@ -93,7 +93,8 @@ public class Handler implements Runnable {
 	/**
 	 * Client To Server Stream
 	 * 
-	 * @param clientID failsafe to prevent client from transmitting two different IDs
+	 * @param clientID
+	 *            failsafe to prevent client from transmitting two different IDs
 	 */
 	private void clientToServerStream(int clientID) {
 		/*
@@ -110,8 +111,8 @@ public class Handler implements Runnable {
 			loadedProfile.setClientID(clientID);
 
 			/*
-			 * Check ob die ID überhaupt einen Downstream hat TODO
-			 * checkForDownstream(...) always returns true at the moment
+			 * Check ob die ID überhaupt einen Downstream hat TODO checkForDownstream(...)
+			 * always returns true at the moment
 			 */
 			if (checkForDownstream(loadedProfile.getClientID())) {
 				lib.Debug.debug(this, "New profile detected.", true);
@@ -191,7 +192,6 @@ public class Handler implements Runnable {
 	 * @param clientID
 	 */
 	private void deleteProfilOf(int clientID) {
-
 		int handlerAmount = networkServiceThread.getAllServerToClientHandler().size();
 		lib.Debug.debug(this, "handlerAmount = " + handlerAmount);
 		lib.Debug.debug(this, "to be deleted ID = " + clientID, true);
