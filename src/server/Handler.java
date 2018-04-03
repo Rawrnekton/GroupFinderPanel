@@ -58,22 +58,20 @@ public class Handler implements Runnable {
 	 * client.isClosed()
 	 */
 	public void run() {
-		// check if upstream or downstream
-
-		// statusMessage = "Clienthandler started.";
-		// System.out.println(statusMessage);
-
+		/*
+		 * check if the connected client is updater or data fetcher
+		 */
 		try {
 			lib.Debug.debug("reading clientID");
-			// clientID = (int) inFromClientStream.readObject();
+			
 			clientID = inFromClientStream.readInt();
 
 			lib.Debug.debug("received ID = " + clientID);
 			/*
 			 * if ID is zero: this is the first thread that the client connected with ->
 			 * give him a real ID
-			 *
-			 * setup here is slightly hacky tbh
+			 * 
+			 * 0 as id is never used after beeing connected for the first time
 			 */
 			if (clientID == 0) {
 				lib.Debug.debug(this, "new client detected");
@@ -82,7 +80,10 @@ public class Handler implements Runnable {
 			} else {
 				clientType = "clienToServerStream";
 
-				// save offered ID in the downstream to prevent meddling with the id
+				/*
+				 * save offered ID in the downstream to prevent meddling with the id
+				 * to prevent a fetcher to have a different id as the updater
+				 */
 				clientToServerStream(clientID);
 			}
 		} catch (IOException e1) {
@@ -156,14 +157,13 @@ public class Handler implements Runnable {
 					if (newProfilesAvailable) {
 						newProfilesAvailable = false;
 						outToClientStream.reset();
-						// serverToClientMessage.setLoadedProfileList(networkServiceThread.getClientProfiles());
-						// //storedData.getLoadedProfileList());
+						
 						lib.Debug.debug(this, "sending " + networkServiceThread.getClientProfiles().size()
 								+ " Profiles to ID " + clientID, true);
 						ServerToClientMessage msg = new ServerToClientMessage();
 						msg.setClientID(clientID);
 						msg.setLoadedProfileList(networkServiceThread.getClientProfiles());
-						// outToClientStream.writeObject(networkServiceThread.getClientProfiles());
+						
 						outToClientStream.writeObject(msg);
 					}
 				} catch (InterruptedException e) {
